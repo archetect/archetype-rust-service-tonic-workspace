@@ -30,7 +30,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         None => {
             let persistence = {{ ArtifactId }}Persistence::new().await?;
             let core = {{ ArtifactId }}Core::new(persistence).await?;
-            let server = {{ ArtifactId }}Server::new(core).await?;
+            let mut server = {{ ArtifactId }}Server::new(core).await?;
             tokio::select! {
                 result = server.serve() => {
                   return result;

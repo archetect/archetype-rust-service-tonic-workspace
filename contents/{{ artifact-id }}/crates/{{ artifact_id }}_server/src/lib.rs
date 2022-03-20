@@ -2,6 +2,8 @@ use crate::settings::ServerSettings;
 use {{ artifact_id }}_core::{
     proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer, {{ ArtifactId }}Core,
 };
+use tokio::net::TcpListener;
+use tokio_stream::wrappers::TcpListenerStream;
 
 use tonic::transport::Server;
 
@@ -11,6 +13,7 @@ pub mod settings;
 pub struct {{ ArtifactId }}Server {
     core: {{ ArtifactId }}Core,
     settings: ServerSettings,
+    service_port: Option<u16>,
 }
 
 impl {{ ArtifactId }}Server {
@@ -22,14 +25,15 @@ impl {{ ArtifactId }}Server {
         core: {{ ArtifactId }}Core,
         settings: ServerSettings,
     ) -> Result<{{ ArtifactId }}Server, Box<dyn std::error::Error>> {
-        Ok({{ ArtifactId }}Server { core, settings })
+        Ok({{ ArtifactId }}Server { core, settings, service_port: None })
     }
 
-    pub async fn serve(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn serve(&mut self) -> Result<(), Box<dyn std::error::Error>> {
         println!("{{ ArtifactId }} starting...");
 
-        let endpoint = format!("{}:{}", self.settings.host(), self.settings.service().port());
-        let addr = endpoint.parse().unwrap();
+        let listener = TcpListener::bind((self.settings.host(), self.settings.service().port())).await?;
+        let addr = listener.local_addr()?;
+        self.service_port = Some(addr.port());
 
         let (mut health_reporter, health_service) = tonic_health::server::health_reporter();
         health_reporter
@@ -47,9 +51,11 @@ impl {{ ArtifactId }}Server {
             .add_service(reflection_service)
             .add_service({{ ArtifactId }}ProtoServer::new(self.core.clone()));
 
-        println!("{{ ArtifactId }} started on {}", addr);
+        println!("{{ ArtifactId }} started on {}", listener.local_addr()?);
 
-        server.serve(addr).await?;
+        server
+            .serve_with_incoming(TcpListenerStream::new(listener))
+            .await?;
 
         Ok(())
     }
