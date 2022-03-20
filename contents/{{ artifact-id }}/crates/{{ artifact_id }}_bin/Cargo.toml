@@ -10,6 +10,8 @@ path = "src/main.rs"
 
 [dependencies]
 {{ artifact_id }}_server = { path = "../{{ artifact_id }}_server" }
+{{ artifact_id }}_core = { path = "../{{ artifact_id }}_core" }
+{{ artifact_id }}_persistence = { path = "../{{ artifact_id }}_persistence" }
 
 clap = { version ="3", features = ["cargo"] }
 tokio = {version = "1.17.0", features = ["rt-multi-thread", "time", "macros", "net", "signal"]}

@@ -1,3 +1,7 @@
+use {{ artifact_id }}_core::{{ ArtifactId }}Core;
+use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
+use {{ artifact_id }}_server::{{ ArtifactId }}Server;
+
 mod cli;
 
 #[tokio::main]
@@ -24,8 +28,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             unreachable!()
         }
         None => {
+            let persistence = {{ ArtifactId }}Persistence::new().await?;
+            let core = {{ ArtifactId }}Core::new(persistence).await?;
+            let server = {{ ArtifactId }}Server::new(core).await?;
             tokio::select! {
-                result = {{ artifact_id }}_server::{{ ArtifactId }}Server::serve() => {
+                result = server.serve() => {
                   return result;
                 },
                 _ = tokio::signal::ctrl_c() => {

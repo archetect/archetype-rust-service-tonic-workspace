@@ -3,9 +3,9 @@ use serde::{Deserialize, Serialize};
 use url::Url;
 
 const DEFAULT_DATABASE_URL: Lazy<Url> =
-    Lazy::new(|| Url::parse("postgres://postgres:password@localhost/{{ artifact-id }}").unwrap());
+    Lazy::new(|| Url::parse("postgres://postgres:password@localhost/{{ prefix_name }}-service").unwrap());
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct PersistenceSettings {
     #[serde(skip_serializing_if = "Option::is_none")]
     temporary: Option<bool>,
@@ -36,7 +36,7 @@ impl Default for PersistenceSettings {
     }
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DatabaseSettings {
     url: Url,
 }

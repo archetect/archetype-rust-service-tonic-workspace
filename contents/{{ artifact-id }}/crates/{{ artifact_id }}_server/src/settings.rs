@@ -4,7 +4,7 @@ const DEFAULT_HOST: &str = "0.0.0.0";
 const DEFAULT_SERVICE_PORT: u16 = 8080;
 const DEFAULT_MANAGEMENT_PORT: u16 = 8081;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerSettings {
     host: String,
     service: ServiceSettings,
@@ -35,7 +35,7 @@ impl Default for ServerSettings {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServiceSettings {
     port: u16,
 }
@@ -54,7 +54,7 @@ impl Default for ServiceSettings {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ManagementSettings {
     port: u16,
 }
