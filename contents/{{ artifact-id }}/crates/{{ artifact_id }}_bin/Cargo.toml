@@ -1,0 +1,15 @@
+[package]
+name = "{{ artifact_id }}_bin"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[[bin]]
+name = "{{ artifact-id }}"
+path = "src/main.rs"
+
+[dependencies]
+{{ artifact_id }}_server = { path = "../{{ artifact_id }}_server" }
+
+clap = { version ="3", features = ["cargo"] }
+tokio = {version = "1.17.0", features = ["rt-multi-thread", "time", "macros", "net", "signal"]}

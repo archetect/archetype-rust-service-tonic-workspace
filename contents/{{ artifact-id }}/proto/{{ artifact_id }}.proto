@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package {{ artifact_id }};
+
+import "google/protobuf/wrappers.proto";
+
+message Id {
+    string value = 1;
+}
+
+message {{ PrefixName }} {
+    Id id = 1;
+    string contents = 2;
+}
+
+message Create{{ PrefixName }}Request {
+    string contents = 1;
+}
+
+message Create{{ PrefixName }}Response {
+    {{ PrefixName }} record = 1;
+}
+
+message Get{{ PrefixName }}ListRequest {
+    uint32 page_size = 1;
+    uint32 page = 2;
+}
+
+message Get{{ PrefixName }}ListResponse {
+    repeated {{ PrefixName }} record = 1;
+    uint32 total_pages = 2;
+}
+
+service {{ ArtifactId }} {
+    rpc Create{{ PrefixName }}(Create{{ PrefixName }}Request) returns (Create{{ PrefixName }}Response) {}
+    rpc Get{{ PrefixName }}List(Get{{ PrefixName }}ListRequest) returns (Get{{ PrefixName }}ListResponse) {}
+}
