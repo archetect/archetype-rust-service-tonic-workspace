@@ -9,9 +9,9 @@ use testcontainers_async::{DatabaseContainer, Image};
 use crate::settings::PersistenceSettings;
 
 pub mod entities;
+mod r#impl;
 pub mod migrations;
 pub mod settings;
-mod r#impl;
 
 #[derive(Clone)]
 pub struct {{ ArtifactId }}Persistence {

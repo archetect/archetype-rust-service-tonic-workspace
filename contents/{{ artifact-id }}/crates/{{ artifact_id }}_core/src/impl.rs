@@ -1,17 +1,14 @@
 use tonic::{Request, Response, Status};
 
-use {{ artifact_id }}_persistence::{
-    entities::*, Page, sea_orm::*, sea_orm::prelude::*,
-};
+use {{ artifact_id }}_persistence::{entities::*, sea_orm::prelude::*, sea_orm::*, Page};
 
-use crate::{{'{'}}{{ ArtifactId }}Core, proto::{
-    {{ PrefixName }},
-    Get{{ PrefixName }}ListRequest,
-    Get{{ PrefixName }}ListResponse,
-    Create{{ PrefixName }}Request,
-    Create{{ PrefixName }}Response,
-    {{ artifact_id }}_server::{{ ArtifactId }},
-}};
+use crate::{
+    proto::{
+        {{ artifact_id }}_server::{{ ArtifactId }}, Create{{ PrefixName }}Request, Create{{ PrefixName }}Response, {{ PrefixName }},
+        Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
+    },
+    {{ ArtifactId }}Core,
+};
 
 #[tonic::async_trait]
 impl {{ ArtifactId }} for {{ ArtifactId }}Core {
@@ -50,10 +47,7 @@ impl {{ ArtifactId }} for {{ ArtifactId }}Core {
             .await;
 
         match response {
-            Ok(Page {
-                   records,
-                   total_pages,
-               }) => {
+            Ok(Page { records, total_pages }) => {
                 let records = records.into_iter().map(Into::into).collect();
                 Ok(Response::new(Get{{ PrefixName }}ListResponse {
                     record: records,

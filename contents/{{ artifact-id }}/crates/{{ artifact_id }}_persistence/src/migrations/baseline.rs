@@ -24,11 +24,7 @@ impl MigrationTrait for Migration {
                             .not_null()
                             .primary_key(),
                     )
-                    .col(
-                        ColumnDef::new(entities::{{ prefix_name }}::Column::Contents)
-                            .string()
-                            .not_null(),
-                    )
+                    .col(ColumnDef::new(entities::{{ prefix_name }}::Column::Contents).string().not_null())
                     .to_owned(),
             )
             .await
@@ -36,12 +32,7 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
         manager
-            .drop_table(
-                Table::drop()
-                    .table(entities::{{ prefix_name }}::Entity)
-                    .if_exists()
-                    .to_owned(),
-            )
+            .drop_table(Table::drop().table(entities::{{ prefix_name }}::Entity).if_exists().to_owned())
             .await
     }
 }

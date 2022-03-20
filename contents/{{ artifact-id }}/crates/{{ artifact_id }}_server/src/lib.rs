@@ -1,7 +1,6 @@
 use crate::settings::ServerSettings;
 use {{ artifact_id }}_core::{
-    proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer,
-    {{ ArtifactId }}Core,
+    proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer, {{ ArtifactId }}Core,
 };
 
 use tonic::transport::Server;
@@ -21,12 +20,9 @@ impl {{ ArtifactId }}Server {
 
     pub async fn new_with_settings(
         core: {{ ArtifactId }}Core,
-        settings: ServerSettings
+        settings: ServerSettings,
     ) -> Result<{{ ArtifactId }}Server, Box<dyn std::error::Error>> {
-        Ok({{ ArtifactId }}Server {
-            core,
-            settings
-        })
+        Ok({{ ArtifactId }}Server { core, settings })
     }
 
     pub async fn serve(&self) -> Result<(), Box<dyn std::error::Error>> {
@@ -42,9 +38,7 @@ impl {{ ArtifactId }}Server {
 
         let reflection_service = tonic_reflection::server::Builder::configure()
             .register_encoded_file_descriptor_set({{ artifact_id }}_core::proto::FILE_DESCRIPTOR_SET)
-            .register_encoded_file_descriptor_set(
-                tonic_health::proto::GRPC_HEALTH_V1_FILE_DESCRIPTOR_SET,
-            )
+            .register_encoded_file_descriptor_set(tonic_health::proto::GRPC_HEALTH_V1_FILE_DESCRIPTOR_SET)
             .build()
             .unwrap();
 

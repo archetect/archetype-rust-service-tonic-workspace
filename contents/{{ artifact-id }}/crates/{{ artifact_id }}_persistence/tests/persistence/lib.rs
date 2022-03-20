@@ -18,44 +18,30 @@ async fn test_insert_{{ prefix_name }}() -> Result<(), Box<dyn std::error::Error
 async fn test_list_{{ prefix_name }}s() -> Result<(), Box<dyn std::error::Error>> {
     let persistence = persistence().await?;
 
-    let Page {
-        records,
-        total_pages,
-    } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
+    let Page { records, total_pages } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
     assert_eq!(records.len(), 0);
     assert_eq!(total_pages, 0);
 
     let _ = insert_{{ prefix_name }}(&persistence).await?;
-    let Page {
-        records,
-        total_pages,
-    } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
+    let Page { records, total_pages } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
     assert_eq!(records.len(), 1);
     assert_eq!(total_pages, 1);
 
     for _ in 1..=14 {
         let _ = insert_{{ prefix_name }}(&persistence).await?;
     }
-    let Page {
-        records,
-        total_pages,
-    } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
+    let Page { records, total_pages } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
     assert_eq!(records.len(), 10);
     assert_eq!(total_pages, 2);
 
-    let Page {
-        records,
-        total_pages,
-    } = persistence.get_{{ prefix_name }}_list(10, 1).await?;
+    let Page { records, total_pages } = persistence.get_{{ prefix_name }}_list(10, 1).await?;
     assert_eq!(records.len(), 5);
     assert_eq!(total_pages, 2);
 
     Ok(())
 }
 
-async fn insert_{{ prefix_name }}(
-    persistence: &{{ ArtifactId }}Persistence,
-) -> Result<{{ prefix_name }}::Model, DbErr> {
+async fn insert_{{ prefix_name }}(persistence: &{{ ArtifactId }}Persistence) -> Result<{{ prefix_name }}::Model, DbErr> {
     let {{ prefix_name }}_record = {{ prefix_name }}::ActiveModel {
         id: Set(Uuid::new_v4()),
         contents: Set("Hello World!".to_owned()),

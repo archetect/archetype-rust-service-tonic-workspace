@@ -8,30 +8,17 @@ fn main() {
         .subcommand(
             SubCommand::with_name("postgres")
                 .about("Dockerized PostgreSQL Management")
-                .subcommand(
-                    SubCommand::with_name("init")
-                        .about("Create and Start a PostgreSQL Docker Container"),
-                )
+                .subcommand(SubCommand::with_name("init").about("Create and Start a PostgreSQL Docker Container"))
                 .subcommand(SubCommand::with_name("kill").about("Kill PostgreSQL Docker Container"))
                 .subcommand(SubCommand::with_name("stop").about("Stop PostgreSQL Docker Container"))
-                .subcommand(
-                    SubCommand::with_name("start")
-                        .about("Start an existing PostgreSQL Docker Container"),
-                )
-                .subcommand(
-                    SubCommand::with_name("rm")
-                        .about("Remove an existing PostgreSQL Docker Container"),
-                ),
+                .subcommand(SubCommand::with_name("start").about("Start an existing PostgreSQL Docker Container"))
+                .subcommand(SubCommand::with_name("rm").about("Remove an existing PostgreSQL Docker Container")),
         )
         .subcommand(
             SubCommand::with_name("docker")
                 .about("Docker Operations")
-                .subcommand(
-                    SubCommand::with_name("build").about("Builds an application Docker image."),
-                )
-                .subcommand(
-                    SubCommand::with_name("rmi").about("Removes the application Docker image."),
-                ),
+                .subcommand(SubCommand::with_name("build").about("Builds an application Docker image."))
+                .subcommand(SubCommand::with_name("rmi").about("Removes the application Docker image.")),
         )
         .get_matches();
 
@@ -63,7 +50,7 @@ fn docker_build() {
     process::Command::new("docker")
         .arg("build")
         .arg("-t")
-        .arg("{{ artifact-id }}")
+        .arg("{{ prefix_name }}-service")
         .arg(".")
         .spawn()
         .expect("Error spawning docker build")
@@ -87,7 +74,7 @@ fn postgres_init() {
         .arg("-e")
         .arg("POSTGRES_PASSWORD=password")
         .arg("-e")
-        .arg("POSTGRES_DB={{ artifact-id }}")
+        .arg("POSTGRES_DB={{ prefix_name }}-service")
         .arg("-p")
         .arg("5432:5432")
         .arg("--name")

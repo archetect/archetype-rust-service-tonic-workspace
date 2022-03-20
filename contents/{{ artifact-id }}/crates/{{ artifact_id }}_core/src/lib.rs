@@ -1,7 +1,7 @@
 mod converters;
 mod r#impl;
 
-use {{ artifact_id }}_persistence::{{'{'}}{{ ArtifactId }}Persistence};
+use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
 
 pub mod proto {
     tonic::include_proto!("{{ artifact_id }}");
