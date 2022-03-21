@@ -2,7 +2,9 @@ use crate::settings::ServerSettings;
 use {{ artifact_id }}_core::{
     proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer, {{ ArtifactId }}Core,
 };
+use std::sync::Arc;
 use tokio::net::TcpListener;
+use tokio::sync::Mutex;
 use tokio_stream::wrappers::TcpListenerStream;
 
 use tonic::transport::Server;
@@ -12,28 +14,63 @@ pub mod settings;
 #[derive(Clone)]
 pub struct {{ ArtifactId }}Server {
     core: {{ ArtifactId }}Core,
-    settings: ServerSettings,
-    service_port: Option<u16>,
+    service_port: u16,
+    listener: Arc<Mutex<Option<TcpListener>>>,
+}
+
+pub struct Builder {
+    host: String,
+    service_port: u16,
+    core: {{ ArtifactId }}Core,
+}
+
+impl Builder {
+    pub fn new(core: {{ ArtifactId }}Core) -> Builder {
+        Builder::new_with_settings(core, ServerSettings::default())
+    }
+
+    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: ServerSettings) -> Builder {
+        Builder {
+            host: settings.host().to_owned(),
+            service_port: settings.service().port(),
+            core,
+        }
+    }
+
+    pub fn with_random_port(mut self) -> Builder {
+        self.service_port = 0;
+        self
+    }
+
+    pub async fn build(self) -> Result<{{ ArtifactId }}Server, Box<dyn std::error::Error>> {
+        let listener = TcpListener::bind((self.host, self.service_port)).await?;
+        let addr = listener.local_addr()?;
+
+        Ok({{ ArtifactId }}Server {
+            core: self.core,
+            service_port: addr.port(),
+            listener: Arc::new(Mutex::new(Some(listener))),
+        })
+    }
 }
 
 impl {{ ArtifactId }}Server {
-    pub async fn new(core: {{ ArtifactId }}Core) -> Result<{{ ArtifactId }}Server, Box<dyn std::error::Error>> {
-        {{ ArtifactId }}Server::new_with_settings(core, ServerSettings::default()).await
+    pub fn new(core: {{ ArtifactId }}Core) -> Builder {
+        Builder::new(core)
     }
 
-    pub async fn new_with_settings(
-        core: {{ ArtifactId }}Core,
-        settings: ServerSettings,
-    ) -> Result<{{ ArtifactId }}Server, Box<dyn std::error::Error>> {
-        Ok({{ ArtifactId }}Server { core, settings, service_port: None })
+    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: ServerSettings) -> Builder {
+        Builder::new_with_settings(core, settings)
     }
 
-    pub async fn serve(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    pub fn service_port(&self) -> u16 {
+        self.service_port
+    }
+
+    pub async fn serve(&self) -> Result<(), Box<dyn std::error::Error>> {
         println!("{{ ArtifactId }} starting...");
 
-        let listener = TcpListener::bind((self.settings.host(), self.settings.service().port())).await?;
-        let addr = listener.local_addr()?;
-        self.service_port = Some(addr.port());
+        let listener = self.listener.lock().await.take().expect("Listener Expected");
 
         let (mut health_reporter, health_service) = tonic_health::server::health_reporter();
         health_reporter
@@ -53,9 +90,7 @@ impl {{ ArtifactId }}Server {
 
         println!("{{ ArtifactId }} started on {}", listener.local_addr()?);
 
-        server
-            .serve_with_incoming(TcpListenerStream::new(listener))
-            .await?;
+        server.serve_with_incoming(TcpListenerStream::new(listener)).await?;
 
         Ok(())
     }
