@@ -1,5 +1,6 @@
 use once_cell::unsync::Lazy;
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 use url::Url;
 
 const DEFAULT_DATABASE_URL: Lazy<Url> =
@@ -39,6 +40,12 @@ impl Default for PersistenceSettings {
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct DatabaseSettings {
     url: Url,
+    max_connections: Option<u32>,
+    min_connections: Option<u32>,
+    connect_timeout_millis: Option<u64>,
+    idle_timeout_seconds: Option<u64>,
+    max_lifetime_seconds: Option<u64>,
+    log_sql: Option<bool>,
 }
 
 impl DatabaseSettings {
@@ -50,12 +57,42 @@ impl DatabaseSettings {
         self.url = url.clone();
         self
     }
+
+    pub fn max_connections(&self) -> Option<u32> {
+        self.max_connections
+    }
+
+    pub fn min_connections(&self) -> Option<u32> {
+        self.min_connections
+    }
+
+    pub fn connect_timeout(&self) -> Option<Duration> {
+        self.connect_timeout_millis.map(|value| Duration::from_millis(value))
+    }
+
+    pub fn idle_timeout(&self) -> Option<Duration> {
+        self.idle_timeout_seconds.map(|value| Duration::from_secs(value))
+    }
+
+    pub fn max_lifetime(&self) -> Option<Duration> {
+        self.max_lifetime_seconds.map(|value| Duration::from_secs(value))
+    }
+
+    pub fn log_sql(&self) -> bool {
+        self.log_sql.unwrap_or(false)
+    }
 }
 
 impl Default for DatabaseSettings {
     fn default() -> Self {
         DatabaseSettings {
             url: DEFAULT_DATABASE_URL.clone(),
+            max_connections: None,
+            min_connections: None,
+            connect_timeout_millis: None,
+            idle_timeout_seconds: None,
+            max_lifetime_seconds: None,
+            log_sql: None,
         }
     }
 }

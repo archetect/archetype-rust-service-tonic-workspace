@@ -9,11 +9,11 @@ This project's layers are contained within the following modules. Each layer may
 you'd like to embed the lowest persistence layer in an ETL application, embed the middle core layer in an application 
 composed of multiple business domains, or embed the highest server layer in a integration test. 
 
-* [{{ PrefixName }} Service Bin](crates/{{ artifact_id }}_bin/README.md) - CLI, Configuration Loading, Operational Controls
-* [{{ PrefixName }} Service Client](crates/{{ artifact_id }}_client/README.md) - Client Library used in integration tests and external applications                        
-* [{{ PrefixName }} Service Core](crates/{{ artifact_id }}_core/README.md) - Core business logic implementing the gRPC API
-* [{{ PrefixName }} Service Persistence](crates/{{ artifact_id }}_persistence/README.md) - Persistence Logic
-* [{{ PrefixName }} Service Server](crates/{{ artifact_id }}_server/README.md) - Exposes the Core as a network server
+* [{{ PrefixName }} Service: Bin](crates/{{ artifact_id }}_bin/README.md) - CLI, Configuration Loading, Operational Controls
+* [{{ PrefixName }} Service: Client](crates/{{ artifact_id }}_client/README.md) - Client Library used in integration tests and external applications                        
+* [{{ PrefixName }} Service: Core](crates/{{ artifact_id }}_core/README.md) - Core business logic implementing the gRPC API
+* [{{ PrefixName }} Service: Persistence](crates/{{ artifact_id }}_persistence/README.md) - Persistence Logic
+* [{{ PrefixName }} Service: Server](crates/{{ artifact_id }}_server/README.md) - Exposes the Core as a network server
 
 ## Building
 

@@ -40,7 +40,25 @@ impl {{ ArtifactId }}Persistence {
         println!("TestContainer Connect CLI: {connect_cli}");
 
         let connect_url = temp_db.connect_url().await?;
-        let connection = connect(&connect_url).await?;
+
+        let mut options = ConnectOptions::new(connect_url);
+        if let Some(value) = settings.database().max_connections() {
+            options.max_connections(value);
+        }
+        if let Some(value) = settings.database().min_connections() {
+            options.min_connections(value);
+        }
+        if let Some(value) = settings.database().connect_timeout() {
+            options.connect_timeout(value);
+        }
+        if let Some(value) = settings.database().idle_timeout() {
+            options.idle_timeout(value);
+        }
+        if let Some(value) = settings.database().max_lifetime() {
+            options.max_lifetime(value);
+        }
+
+        let connection: DatabaseConnection = Database::connect(options).await?;
 
         migrations::Migrator::up(&connection, None)
             .await
@@ -60,13 +78,4 @@ impl {{ ArtifactId }}Persistence {
 pub struct Page<T> {
     pub records: Vec<T>,
     pub total_pages: usize,
-}
-
-async fn connect(url: &str) -> Result<DatabaseConnection, Box<dyn std::error::Error>> {
-    let mut options = ConnectOptions::new(url.to_owned());
-    options.sqlx_logging(true);
-
-    let connection: DatabaseConnection = Database::connect(options).await?;
-
-    Ok(connection)
 }
