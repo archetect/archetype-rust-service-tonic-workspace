@@ -3,10 +3,12 @@ use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
 use {{ artifact_id }}_server::{{ ArtifactId }}Server;
 
 mod cli;
+mod settings;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = cli::arg_matches();
+    let settings = settings::Settings::new(&args)?;
 
     match args.subcommand() {
         Some(("migrate", args)) => {
@@ -28,9 +30,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             unreachable!()
         }
         None => {
-            let persistence = {{ ArtifactId }}Persistence::new().await?;
+            let persistence = {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?;
             let core = {{ ArtifactId }}Core::new(persistence).await?;
-            let server = {{ ArtifactId }}Server::new(core).build().await?;
+            let server = {{ ArtifactId }}Server::new_with_settings(core, settings.server())
+                .build()
+                .await?;
             tokio::select! {
                 result = server.serve() => {
                   return result;

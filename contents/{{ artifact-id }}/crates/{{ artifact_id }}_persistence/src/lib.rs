@@ -22,11 +22,11 @@ pub struct {{ ArtifactId }}Persistence {
 
 impl {{ ArtifactId }}Persistence {
     pub async fn new() -> Result<{{ ArtifactId }}Persistence, Box<dyn std::error::Error>> {
-        {{ ArtifactId }}Persistence::new_with_settings(PersistenceSettings::default()).await
+        {{ ArtifactId }}Persistence::new_with_settings(&PersistenceSettings::default()).await
     }
 
     pub async fn new_with_settings(
-        settings: PersistenceSettings,
+        settings: &PersistenceSettings,
     ) -> Result<{{ ArtifactId }}Persistence, Box<dyn std::error::Error>> {
         let temp_db = PostgresImage::default()
             .with_database("{{ prefix_name }}-service")

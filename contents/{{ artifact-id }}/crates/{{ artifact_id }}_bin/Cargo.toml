@@ -5,7 +5,7 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [[bin]]
-name = "{{ artifact-id }}"
+name = "{{ prefix_name }}-service"
 path = "src/main.rs"
 
 [dependencies]
@@ -14,4 +14,9 @@ path = "src/main.rs"
 {{ artifact_id }}_persistence = { path = "../{{ artifact_id }}_persistence" }
 
 clap = { version ="3", features = ["cargo"] }
+config = { version = "0.12", default-features = false, features = ["yaml"] }
+dotenv = "0.15"
+serde = {version = "1.0", features = ["serde_derive"] }
+serde_yaml = "0.8"
+shellexpand = "2.1"
 tokio = {version = "1.17.0", features = ["rt-multi-thread", "time", "macros", "net", "signal"]}

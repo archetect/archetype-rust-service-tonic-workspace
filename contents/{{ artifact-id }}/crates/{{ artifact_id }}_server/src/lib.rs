@@ -26,10 +26,10 @@ pub struct Builder {
 
 impl Builder {
     pub fn new(core: {{ ArtifactId }}Core) -> Builder {
-        Builder::new_with_settings(core, ServerSettings::default())
+        Builder::new_with_settings(core, &ServerSettings::default())
     }
 
-    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: ServerSettings) -> Builder {
+    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: &ServerSettings) -> Builder {
         Builder {
             host: settings.host().to_owned(),
             service_port: settings.service().port(),
@@ -59,7 +59,7 @@ impl {{ ArtifactId }}Server {
         Builder::new(core)
     }
 
-    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: ServerSettings) -> Builder {
+    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: &ServerSettings) -> Builder {
         Builder::new_with_settings(core, settings)
     }
 
