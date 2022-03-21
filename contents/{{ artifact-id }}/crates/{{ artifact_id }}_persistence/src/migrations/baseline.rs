@@ -22,7 +22,8 @@ impl MigrationTrait for Migration {
                         ColumnDef::new(entities::{{ prefix_name }}::Column::Id)
                             .uuid()
                             .not_null()
-                            .primary_key(),
+                            .primary_key()
+                            .extra("DEFAULT gen_random_uuid()".to_owned()),
                     )
                     .col(ColumnDef::new(entities::{{ prefix_name }}::Column::Contents).string().not_null())
                     .to_owned(),
