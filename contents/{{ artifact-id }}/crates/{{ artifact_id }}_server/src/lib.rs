@@ -55,11 +55,11 @@ impl Builder {
 }
 
 impl {{ ArtifactId }}Server {
-    pub fn new(core: {{ ArtifactId }}Core) -> Builder {
+    pub fn builder(core: {{ ArtifactId }}Core) -> Builder {
         Builder::new(core)
     }
 
-    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: &ServerSettings) -> Builder {
+    pub fn builder_with_settings(core: {{ ArtifactId }}Core, settings: &ServerSettings) -> Builder {
         Builder::new_with_settings(core, settings)
     }
 

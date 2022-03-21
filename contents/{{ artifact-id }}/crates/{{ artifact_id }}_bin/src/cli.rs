@@ -10,7 +10,20 @@ pub fn arg_matches() -> ArgMatches {
                 .subcommand(Command::new("up").about("Apply migrations"))
                 .subcommand(Command::new("down").about("Un-apply migrations")),
         )
-        .subcommand(Command::new("config").about("Get current config"))
+        .subcommand(
+            Command::new("config")
+                .about("Configuration Operations")
+                .subcommand_required(true)
+                .arg_required_else_help(true)
+                .subcommand(
+                    Command::new("defaults")
+                        .about("Displays the default settings")
+                )
+                .subcommand(
+                    Command::new("merged")
+                        .about("Displays the effective settings from all merged sources.")
+                )
+        )
         .arg(
             Arg::new("config-file")
                 .help("Specifies additional configuration to merge.")

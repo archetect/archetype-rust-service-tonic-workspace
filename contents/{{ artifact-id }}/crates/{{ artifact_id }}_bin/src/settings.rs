@@ -8,9 +8,9 @@ use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 use {{ artifact_id }}_server::settings::ServerSettings;
 
 const DEFAULT_CONFIG_FILE: &str = "etc/{{ prefix_name }}-service";
-const DEFAULT_ENVIRONMENT_PREFIX: &str = "SERVICE";
+const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Settings {
     server: ServerSettings,
     persistence: PersistenceSettings,
@@ -27,15 +27,6 @@ impl Settings {
 
     pub fn to_yaml(&self) -> Result<String, serde_yaml::Error> {
         serde_yaml::to_string(self)
-    }
-}
-
-impl Default for Settings {
-    fn default() -> Self {
-        Settings {
-            server: Default::default(),
-            persistence: Default::default(),
-        }
     }
 }
 
@@ -93,7 +84,7 @@ impl Clap {
     pub fn new(matches: ArgMatches, keys: HashMap<String, String>) -> Clap {
         Clap {
             keys,
-            matches: matches.clone(),
+            matches,
         }
     }
 }

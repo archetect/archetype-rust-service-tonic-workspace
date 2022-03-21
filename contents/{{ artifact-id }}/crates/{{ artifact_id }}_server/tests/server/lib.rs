@@ -24,7 +24,7 @@ async fn test_core() -> Result<(), Box<dyn std::error::Error>> {
 async fn init() -> Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Server), Box<dyn std::error::Error>> {
     let persistence = {{ ArtifactId }}Persistence::new().await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
-    let server = {{ ArtifactId }}Server::new(core).with_random_port().build().await?;
+    let server = {{ ArtifactId }}Server::builder(core).with_random_port().build().await?;
 
     let server_clone = server.clone();
 
