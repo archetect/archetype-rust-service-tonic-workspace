@@ -27,8 +27,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             match args.subcommand() {
                 Some(("defaults", _)) => println!("{}", settings::Settings::default().to_yaml()?),
                 Some(("merged", _)) => println!("{}", &settings.to_yaml()?),
-                Some((&_, _)) => unreachable!(),
-                None => unreachable!(),
+                _ => unreachable!(),
             }
         }
         Some((_command, _args)) => {
