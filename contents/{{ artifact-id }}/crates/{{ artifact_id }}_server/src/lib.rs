@@ -68,8 +68,6 @@ impl {{ ArtifactId }}Server {
     }
 
     pub async fn serve(&self) -> Result<(), Box<dyn std::error::Error>> {
-        println!("{{ ArtifactId }} starting...");
-
         let listener = self.listener.lock().await.take().expect("Listener Expected");
 
         let (mut health_reporter, health_service) = tonic_health::server::health_reporter();
@@ -88,7 +86,7 @@ impl {{ ArtifactId }}Server {
             .add_service(reflection_service)
             .add_service({{ ArtifactId }}ProtoServer::new(self.core.clone()));
 
-        println!("{{ ArtifactId }} started on {}", listener.local_addr()?);
+        tracing::info!("{{ ArtifactId }} started on {}", listener.local_addr()?);
 
         server.serve_with_incoming(TcpListenerStream::new(listener)).await?;
 

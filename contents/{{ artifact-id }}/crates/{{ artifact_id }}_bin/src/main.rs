@@ -4,11 +4,13 @@ use {{ artifact_id }}_server::{{ ArtifactId }}Server;
 
 mod cli;
 mod settings;
+mod traces;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args = cli::arg_matches();
     let settings = settings::Settings::new(&args)?;
+    traces::init(settings.tracing());
 
     match args.subcommand() {
         Some(("migrate", args)) => {
@@ -34,6 +36,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             unreachable!()
         }
         None => {
+            tracing::info!("Initializing...");
             let persistence = {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?;
             let core = {{ ArtifactId }}Core::new(persistence).await?;
             let server = {{ ArtifactId }}Server::builder_with_settings(core, settings.server())

@@ -17,7 +17,7 @@ impl {{ ArtifactId }} for {{ ArtifactId }}Core {
         request: Request<Create{{ PrefixName }}Request>,
     ) -> Result<Response<Create{{ PrefixName }}Response>, Status> {
         let request = request.into_inner();
-        println!("Received: {:?}", request);
+        tracing::info!("Received: {:?}", request);
 
         let {{ prefix_name }}_record = {{ prefix_name }}::ActiveModel {
             id: Set(Uuid::new_v4()),
@@ -39,7 +39,7 @@ impl {{ ArtifactId }} for {{ ArtifactId }}Core {
         request: Request<Get{{ PrefixName }}ListRequest>,
     ) -> Result<Response<Get{{ PrefixName }}ListResponse>, Status> {
         let request = request.into_inner();
-        println!("Received: {:?}", request);
+        tracing::info!("Received: {:?}", request);
 
         let response = self
             .persistence

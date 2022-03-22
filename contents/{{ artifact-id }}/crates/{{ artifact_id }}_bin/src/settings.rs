@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 
 use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 use {{ artifact_id }}_server::settings::ServerSettings;
+use crate::traces::TraceFormat;
 
 const DEFAULT_CONFIG_FILE: &str = "etc/{{ prefix_name }}-service";
 const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
@@ -14,6 +15,7 @@ const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
 pub struct Settings {
     server: ServerSettings,
     persistence: PersistenceSettings,
+    tracing: TraceSettings,
 }
 
 impl Settings {
@@ -23,6 +25,10 @@ impl Settings {
 
     pub fn persistence(&self) -> &PersistenceSettings {
         &self.persistence
+    }
+
+    pub fn tracing(&self) -> &TraceSettings {
+        &self.tracing
     }
 
     pub fn to_yaml(&self) -> Result<String, serde_yaml::Error> {
@@ -65,12 +71,24 @@ impl Settings {
         // mappings.insert("management-port".into(), "server.management.port".into());
         mappings.insert("host".into(), "server.host".into());
         mappings.insert("temp-db".into(), "persistence.temporary".into());
+        mappings.insert("tracing-format".into(), "tracing.format".into());
         // mappings.insert("database-url".into(), "persistence.database.url".into());
         let config = config.add_source(Clap::new(args.clone(), mappings));
 
         let conf = config.build()?;
 
         conf.try_deserialize()
+    }
+}
+
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct TraceSettings {
+    format: TraceFormat,
+}
+
+impl TraceSettings {
+    pub fn format(&self) -> &TraceFormat {
+        &self.format
     }
 }
 
@@ -99,6 +117,8 @@ impl Source for Clap {
         for (key, mapped) in &self.keys {
             if let Some(value) = self.matches.value_of(key) {
                 results.insert(mapped.into(), value.into());
+            } else if self.matches.is_present(key) {
+                results.insert(mapped.into(), "true".into());
             }
         }
         Ok(results)

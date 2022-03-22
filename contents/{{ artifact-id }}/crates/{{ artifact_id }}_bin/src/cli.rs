@@ -1,4 +1,5 @@
 use clap::{command, Arg, ArgMatches, Command};
+use crate::traces::TraceFormat;
 
 pub fn arg_matches() -> ArgMatches {
     command!()
@@ -53,6 +54,12 @@ pub fn arg_matches() -> ArgMatches {
                 .possible_value("drop")
                 .possible_value("retain")
                 .help("Initialize and migrate a database appended with a dynamically generated suffix."),
+        )
+        .arg(
+            Arg::new("tracing-format")
+                .long("tracing-format")
+                .possible_values(TraceFormat::possible_values())
+                .ignore_case(false)
         )
         .get_matches()
 }

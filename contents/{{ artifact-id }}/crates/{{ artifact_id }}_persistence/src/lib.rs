@@ -35,9 +35,9 @@ impl {{ ArtifactId }}Persistence {
             .await?;
 
         let jdbc_url = temp_db.jdbc_url().await?;
-        println!("TestContainer JDBC URL: {jdbc_url}");
+        tracing::info!("TestContainer JDBC URL: {jdbc_url}");
         let connect_cli = temp_db.connect_cli().await?;
-        println!("TestContainer Connect CLI: {connect_cli}");
+        tracing::info!("TestContainer Connect CLI: {connect_cli}");
 
         let connect_url = temp_db.connect_url().await?;
 
@@ -57,12 +57,13 @@ impl {{ ArtifactId }}Persistence {
         if let Some(value) = settings.database().max_lifetime() {
             options.max_lifetime(value);
         }
+        options.sqlx_logging(settings.database().log_sql());
 
         let connection: DatabaseConnection = Database::connect(options).await?;
 
         migrations::Migrator::up(&connection, None)
             .await
-            .expect("Error performing migration");
+            .expect("Error performing migrations");
 
         Ok({{ ArtifactId }}Persistence {
             connection,
