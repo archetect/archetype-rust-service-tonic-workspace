@@ -1,3 +1,4 @@
+use anyhow::Result;
 use {{ artifact_id }}_core::proto::{{ artifact_id }}_server::{{ ArtifactId }};
 use {{ artifact_id }}_core::proto::{
     Create{{ PrefixName }}Request, Create{{ PrefixName }}Response, Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
@@ -7,7 +8,7 @@ use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
 use tonic::Request;
 
 #[tokio::test]
-async fn test_create_{{ prefix_name }}() -> anyhow::Result<()> {
+async fn test_create_{{ prefix_name }}() -> Result<()> {
     let core = core().await?;
 
     let result = core
@@ -36,7 +37,7 @@ async fn test_create_{{ prefix_name }}() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn core() -> anyhow::Result<{{ ArtifactId }}Core> {
+async fn core() -> Result<{{ ArtifactId }}Core> {
     let persistence = {{ ArtifactId }}Persistence::new().await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
     Ok(core)

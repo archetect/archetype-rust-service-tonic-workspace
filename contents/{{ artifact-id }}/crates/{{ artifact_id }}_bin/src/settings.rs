@@ -4,9 +4,9 @@ use clap::ArgMatches;
 use config::{Config, ConfigError, Environment, File, Source, Value};
 use serde::{Deserialize, Serialize};
 
+use crate::traces::TraceFormat;
 use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 use {{ artifact_id }}_server::settings::ServerSettings;
-use crate::traces::TraceFormat;
 
 const DEFAULT_CONFIG_FILE: &str = "etc/{{ prefix_name }}-service";
 const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
@@ -100,10 +100,7 @@ struct Clap {
 
 impl Clap {
     pub fn new(matches: ArgMatches, keys: HashMap<String, String>) -> Clap {
-        Clap {
-            keys,
-            matches,
-        }
+        Clap { keys, matches }
     }
 }
 

@@ -1,3 +1,4 @@
+use anyhow::Result;
 use {{ artifact_id }}_client::proto::{{ artifact_id }}_client::{{ ArtifactId }}Client;
 use {{ artifact_id }}_client::proto::Create{{ PrefixName }}Request;
 use {{ artifact_id }}_core::{{ ArtifactId }}Core;
@@ -7,7 +8,7 @@ use tonic::transport::Channel;
 use tonic::Request;
 
 #[tokio::test]
-async fn test_core() -> anyhow::Result<()> {
+async fn test_core() -> Result<()> {
     let (mut client, _) = init().await?;
 
     let request = Request::new(Create{{ PrefixName }}Request {
@@ -21,7 +22,7 @@ async fn test_core() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn init() -> anyhow::Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Server)> {
+async fn init() -> Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Server)> {
     let persistence = {{ ArtifactId }}Persistence::new().await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
     let server = {{ ArtifactId }}Server::builder(core).with_random_port().build().await?;

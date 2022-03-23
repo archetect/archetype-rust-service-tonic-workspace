@@ -1,6 +1,8 @@
 mod converters;
 mod r#impl;
 
+use anyhow::Result;
+
 use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
 
 pub mod proto {
@@ -15,9 +17,7 @@ pub struct {{ ArtifactId }}Core {
 }
 
 impl {{ ArtifactId }}Core {
-    pub async fn new(
-        persistence: {{ ArtifactId }}Persistence,
-    ) -> anyhow::Result<{{ ArtifactId }}Core> {
+    pub async fn new(persistence: {{ ArtifactId }}Persistence) -> Result<{{ ArtifactId }}Core> {
         Ok({{ ArtifactId }}Core { persistence })
     }
 }

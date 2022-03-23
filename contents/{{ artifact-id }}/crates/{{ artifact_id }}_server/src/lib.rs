@@ -1,3 +1,4 @@
+use anyhow::Result;
 use crate::settings::ServerSettings;
 use {{ artifact_id }}_core::{
     proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer, {{ ArtifactId }}Core,
@@ -42,7 +43,7 @@ impl Builder {
         self
     }
 
-    pub async fn build(self) -> anyhow::Result<{{ ArtifactId }}Server> {
+    pub async fn build(self) -> Result<{{ ArtifactId }}Server> {
         let listener = TcpListener::bind((self.host, self.service_port)).await?;
         let addr = listener.local_addr()?;
 
@@ -67,7 +68,7 @@ impl {{ ArtifactId }}Server {
         self.service_port
     }
 
-    pub async fn serve(&self) -> anyhow::Result<()> {
+    pub async fn serve(&self) -> Result<()> {
         let listener = self.listener.lock().await.take().expect("Listener Expected");
 
         let (mut health_reporter, health_service) = tonic_health::server::health_reporter();

@@ -1,6 +1,6 @@
 use sea_schema::migration::{sea_query::*, *};
 
-use crate::entities;
+use crate::{DbResult, entities};
 
 pub struct Migration;
 
@@ -12,7 +12,7 @@ impl MigrationName for Migration {
 
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
-    async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+    async fn up(&self, manager: &SchemaManager) -> DbResult<()> {
         manager
             .create_table(
                 Table::create()
@@ -31,7 +31,7 @@ impl MigrationTrait for Migration {
             .await
     }
 
-    async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+    async fn down(&self, manager: &SchemaManager) -> DbResult<()> {
         manager
             .drop_table(Table::drop().table(entities::{{ prefix_name }}::Entity).if_exists().to_owned())
             .await

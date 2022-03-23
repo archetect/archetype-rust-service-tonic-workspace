@@ -1,10 +1,11 @@
 use std::sync::Arc;
 
+use anyhow::Result;
 pub use sea_orm;
-use sea_orm::{ConnectOptions, Database, DatabaseConnection};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 use sea_schema::migration::migrator::MigratorTrait;
-use testcontainers_async::modules::postgresql::{PostgresContainer, PostgresImage};
 use testcontainers_async::{DatabaseContainer, Image};
+use testcontainers_async::modules::postgresql::{PostgresContainer, PostgresImage};
 
 use crate::settings::PersistenceSettings;
 
@@ -12,6 +13,8 @@ pub mod entities;
 mod r#impl;
 pub mod migrations;
 pub mod settings;
+
+pub type DbResult<T> = core::result::Result<T, DbErr>;
 
 #[derive(Clone, Debug)]
 pub struct {{ ArtifactId }}Persistence {
@@ -21,13 +24,11 @@ pub struct {{ ArtifactId }}Persistence {
 }
 
 impl {{ ArtifactId }}Persistence {
-    pub async fn new() -> anyhow::Result<{{ ArtifactId }}Persistence> {
+    pub async fn new() -> Result<{{ ArtifactId }}Persistence> {
         {{ ArtifactId }}Persistence::new_with_settings(&PersistenceSettings::default()).await
     }
 
-    pub async fn new_with_settings(
-        settings: &PersistenceSettings,
-    ) -> anyhow::Result<{{ ArtifactId }}Persistence> {
+    pub async fn new_with_settings(settings: &PersistenceSettings) -> Result<{{ ArtifactId }}Persistence> {
         let temp_db = PostgresImage::default()
             .with_database("{{ prefix_name }}-service")
             .with_username("test")

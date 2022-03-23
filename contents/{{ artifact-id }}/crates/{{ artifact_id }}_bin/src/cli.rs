@@ -1,5 +1,5 @@
-use clap::{command, Arg, ArgMatches, Command};
 use crate::traces::TraceFormat;
+use clap::{command, Arg, ArgMatches, Command};
 
 pub fn arg_matches() -> ArgMatches {
     command!()
@@ -16,14 +16,8 @@ pub fn arg_matches() -> ArgMatches {
                 .about("Configuration Operations")
                 .subcommand_required(true)
                 .arg_required_else_help(true)
-                .subcommand(
-                    Command::new("defaults")
-                        .about("Displays the default settings")
-                )
-                .subcommand(
-                    Command::new("merged")
-                        .about("Displays the effective settings from all merged sources.")
-                )
+                .subcommand(Command::new("defaults").about("Displays the default settings"))
+                .subcommand(Command::new("merged").about("Displays the effective settings from all merged sources.")),
         )
         .arg(
             Arg::new("config-file")
@@ -59,7 +53,7 @@ pub fn arg_matches() -> ArgMatches {
             Arg::new("tracing-format")
                 .long("tracing-format")
                 .possible_values(TraceFormat::possible_values())
-                .ignore_case(false)
+                .ignore_case(false),
         )
         .get_matches()
 }

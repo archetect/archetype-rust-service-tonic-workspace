@@ -1,10 +1,11 @@
+use anyhow::Result;
 use {{ artifact_id }}_persistence::entities::*;
 use {{ artifact_id }}_persistence::sea_orm::prelude::*;
 use {{ artifact_id }}_persistence::sea_orm::*;
-use {{ artifact_id }}_persistence::{{'{'}}{{ ArtifactId }}Persistence, Page};
+use {{ artifact_id }}_persistence::{{'{'}}{{ ArtifactId }}Persistence, DbResult, Page};
 
 #[tokio::test]
-async fn test_insert_{{ prefix_name }}() -> anyhow::Result<()> {
+async fn test_insert_{{ prefix_name }}() -> Result<()> {
     let persistence = persistence().await?;
 
     let {{ prefix_name }} = insert_{{ prefix_name }}(&persistence).await?;
@@ -15,7 +16,7 @@ async fn test_insert_{{ prefix_name }}() -> anyhow::Result<()> {
 }
 
 #[tokio::test]
-async fn test_list_{{ prefix_name }}s() -> anyhow::Result<()> {
+async fn test_list_{{ prefix_name }}s() -> Result<()> {
     let persistence = persistence().await?;
 
     let Page { records, total_pages } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
@@ -41,7 +42,7 @@ async fn test_list_{{ prefix_name }}s() -> anyhow::Result<()> {
     Ok(())
 }
 
-async fn insert_{{ prefix_name }}(persistence: &{{ ArtifactId }}Persistence) -> Result<{{ prefix_name }}::Model, DbErr> {
+async fn insert_{{ prefix_name }}(persistence: &{{ ArtifactId }}Persistence) -> DbResult<{{ prefix_name }}::Model> {
     let {{ prefix_name }}_record = {{ prefix_name }}::ActiveModel {
         id: Set(Uuid::new_v4()),
         contents: Set("Hello World!".to_owned()),
@@ -50,6 +51,6 @@ async fn insert_{{ prefix_name }}(persistence: &{{ ArtifactId }}Persistence) -> 
     persistence.insert_{{ prefix_name }}({{ prefix_name }}_record).await
 }
 
-async fn persistence() -> anyhow::Result<{{ ArtifactId }}Persistence> {
+async fn persistence() -> Result<{{ ArtifactId }}Persistence> {
     {{ ArtifactId }}Persistence::new().await
 }
