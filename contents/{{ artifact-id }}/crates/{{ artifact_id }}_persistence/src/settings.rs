@@ -1,10 +1,8 @@
-use once_cell::unsync::Lazy;
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use url::Url;
 
-const DEFAULT_DATABASE_URL: Lazy<Url> =
-    Lazy::new(|| Url::parse("postgres://postgres:password@localhost/{{ prefix_name }}-service").unwrap());
+const DEFAULT_DATABASE_URL: &str = "postgres://postgres:password@localhost/{{ prefix_name }}-service";
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct PersistenceSettings {
@@ -83,7 +81,7 @@ impl DatabaseSettings {
 impl Default for DatabaseSettings {
     fn default() -> Self {
         DatabaseSettings {
-            url: DEFAULT_DATABASE_URL.clone(),
+            url: Url::parse(DEFAULT_DATABASE_URL).expect("Improperly formed Database URL"),
             max_connections: None,
             min_connections: None,
             connect_timeout_millis: None,
