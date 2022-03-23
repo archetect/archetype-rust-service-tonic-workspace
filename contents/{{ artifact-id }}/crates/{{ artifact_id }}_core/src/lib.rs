@@ -9,7 +9,7 @@ pub mod proto {
     pub const FILE_DESCRIPTOR_SET: &[u8] = tonic::include_file_descriptor_set!("{{ artifact_id }}");
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct {{ ArtifactId }}Core {
     persistence: {{ ArtifactId }}Persistence,
 }

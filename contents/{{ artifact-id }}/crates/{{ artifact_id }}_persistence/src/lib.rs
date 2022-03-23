@@ -13,7 +13,7 @@ mod r#impl;
 pub mod migrations;
 pub mod settings;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct {{ ArtifactId }}Persistence {
     connection: DatabaseConnection,
     #[allow(dead_code)]
