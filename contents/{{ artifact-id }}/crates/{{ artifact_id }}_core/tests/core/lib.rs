@@ -7,7 +7,7 @@ use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
 use tonic::Request;
 
 #[tokio::test]
-async fn test_create_{{ prefix_name }}() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_create_{{ prefix_name }}() -> anyhow::Result<()> {
     let core = core().await?;
 
     let result = core
@@ -36,7 +36,7 @@ async fn test_create_{{ prefix_name }}() -> Result<(), Box<dyn std::error::Error
     Ok(())
 }
 
-async fn core() -> Result<{{ ArtifactId }}Core, Box<dyn std::error::Error>> {
+async fn core() -> anyhow::Result<{{ ArtifactId }}Core> {
     let persistence = {{ ArtifactId }}Persistence::new().await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
     Ok(core)

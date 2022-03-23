@@ -8,6 +8,7 @@ edition = "2021"
 [dependencies]
 {{ artifact_id }}_persistence = { path = "../{{ artifact_id }}_persistence" }
 
+anyhow = "1.0"
 prost = "0.9.0"
 tonic = "0.6.2"
 tracing = "0.1"

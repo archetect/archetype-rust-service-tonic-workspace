@@ -13,6 +13,7 @@ path = "src/main.rs"
 {{ artifact_id }}_core = { path = "../{{ artifact_id }}_core" }
 {{ artifact_id }}_persistence = { path = "../{{ artifact_id }}_persistence" }
 
+anyhow = "1.0"
 clap = { version ="3", features = ["cargo", "derive"] }
 config = { version = "0.12", default-features = false, features = ["yaml"] }
 dotenv = "0.15"

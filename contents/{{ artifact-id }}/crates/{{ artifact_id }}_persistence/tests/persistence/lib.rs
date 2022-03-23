@@ -4,7 +4,7 @@ use {{ artifact_id }}_persistence::sea_orm::*;
 use {{ artifact_id }}_persistence::{{'{'}}{{ ArtifactId }}Persistence, Page};
 
 #[tokio::test]
-async fn test_insert_{{ prefix_name }}() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_insert_{{ prefix_name }}() -> anyhow::Result<()> {
     let persistence = persistence().await?;
 
     let {{ prefix_name }} = insert_{{ prefix_name }}(&persistence).await?;
@@ -15,7 +15,7 @@ async fn test_insert_{{ prefix_name }}() -> Result<(), Box<dyn std::error::Error
 }
 
 #[tokio::test]
-async fn test_list_{{ prefix_name }}s() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_list_{{ prefix_name }}s() -> anyhow::Result<()> {
     let persistence = persistence().await?;
 
     let Page { records, total_pages } = persistence.get_{{ prefix_name }}_list(10, 0).await?;
@@ -50,6 +50,6 @@ async fn insert_{{ prefix_name }}(persistence: &{{ ArtifactId }}Persistence) -> 
     persistence.insert_{{ prefix_name }}({{ prefix_name }}_record).await
 }
 
-async fn persistence() -> Result<{{ ArtifactId }}Persistence, Box<dyn std::error::Error>> {
+async fn persistence() -> anyhow::Result<{{ ArtifactId }}Persistence> {
     {{ ArtifactId }}Persistence::new().await
 }

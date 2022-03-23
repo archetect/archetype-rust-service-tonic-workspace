@@ -7,7 +7,7 @@ use tonic::transport::Channel;
 use tonic::Request;
 
 #[tokio::test]
-async fn test_core() -> Result<(), Box<dyn std::error::Error>> {
+async fn test_core() -> anyhow::Result<()> {
     let (mut client, _) = init().await?;
 
     let request = Request::new(Create{{ PrefixName }}Request {
@@ -21,7 +21,7 @@ async fn test_core() -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn init() -> Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Server), Box<dyn std::error::Error>> {
+async fn init() -> anyhow::Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Server)> {
     let persistence = {{ ArtifactId }}Persistence::new().await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
     let server = {{ ArtifactId }}Server::builder(core).with_random_port().build().await?;

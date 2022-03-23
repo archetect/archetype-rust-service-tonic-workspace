@@ -42,7 +42,7 @@ impl Builder {
         self
     }
 
-    pub async fn build(self) -> Result<{{ ArtifactId }}Server, Box<dyn std::error::Error>> {
+    pub async fn build(self) -> anyhow::Result<{{ ArtifactId }}Server> {
         let listener = TcpListener::bind((self.host, self.service_port)).await?;
         let addr = listener.local_addr()?;
 
@@ -67,7 +67,7 @@ impl {{ ArtifactId }}Server {
         self.service_port
     }
 
-    pub async fn serve(&self) -> Result<(), Box<dyn std::error::Error>> {
+    pub async fn serve(&self) -> anyhow::Result<()> {
         let listener = self.listener.lock().await.take().expect("Listener Expected");
 
         let (mut health_reporter, health_service) = tonic_health::server::health_reporter();

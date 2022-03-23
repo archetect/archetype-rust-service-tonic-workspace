@@ -7,7 +7,7 @@ mod settings;
 mod traces;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> anyhow::Result<()> {
     let args = cli::arg_matches();
     let settings = settings::Settings::new(&args)?;
     traces::init(settings.tracing());

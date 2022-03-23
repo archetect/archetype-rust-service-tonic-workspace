@@ -17,7 +17,7 @@ pub struct {{ ArtifactId }}Core {
 impl {{ ArtifactId }}Core {
     pub async fn new(
         persistence: {{ ArtifactId }}Persistence,
-    ) -> Result<{{ ArtifactId }}Core, Box<dyn std::error::Error>> {
+    ) -> anyhow::Result<{{ ArtifactId }}Core> {
         Ok({{ ArtifactId }}Core { persistence })
     }
 }
