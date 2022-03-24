@@ -1,6 +1,6 @@
 use crate::sea_orm::entity::prelude::*;
-use crate::{{'{'}}{{ ArtifactId }}Persistence, DbResult};
 use crate::Page;
+use crate::{{'{'}}{{ ArtifactId }}Persistence, DbResult};
 
 use crate::entities::*;
 

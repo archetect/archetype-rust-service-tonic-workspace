@@ -14,6 +14,7 @@ path = "src/main.rs"
 {{ artifact_id }}_persistence = { path = "../{{ artifact_id }}_persistence" }
 
 anyhow = "1.0"
+atty = "0.2"
 clap = { version ="3", features = ["cargo", "derive"] }
 config = { version = "0.12", default-features = false, features = ["yaml"] }
 dotenv = "0.15"
@@ -24,4 +25,4 @@ tokio = {version = "1.17.0", features = ["rt-multi-thread", "time", "macros", "n
 tracing = "0.1"
 tracing-attributes = "0.1"
 tracing-futures = "0.2"
-tracing-subscriber = { version ="0.3", features = ["json"] }
+tracing-subscriber = { version ="0.3", features = ["json", "registry", "env-filter"] }

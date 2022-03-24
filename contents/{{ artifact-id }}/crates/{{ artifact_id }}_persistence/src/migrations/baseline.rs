@@ -1,6 +1,6 @@
 use sea_schema::migration::{sea_query::*, *};
 
-use crate::{DbResult, entities};
+use crate::{entities, DbResult};
 
 pub struct Migration;
 

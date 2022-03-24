@@ -28,31 +28,39 @@ pub fn arg_matches() -> ArgMatches {
         )
         .arg(
             Arg::new("host")
+                .help("The host the server listens on.")
                 .long("host")
                 .short('h')
-                .takes_value(true)
-                .help("The host the server listens on."),
+                .takes_value(true),
         )
         .arg(
             Arg::new("service-port")
+                .help("Service Port")
                 .short('p')
                 .long("service-port")
                 .takes_value(true)
-                .validator(is_valid_port)
-                .help("Service Port"),
+                .validator(is_valid_port),
         )
         .arg(
             Arg::new("temp-db")
+                .help("Initialize and migrate an ephemeral database")
                 .long("temp-db")
                 .takes_value(true)
                 .possible_value("drop")
-                .possible_value("retain")
-                .help("Initialize and migrate a database appended with a dynamically generated suffix."),
+                .possible_value("retain"),
         )
         .arg(
             Arg::new("tracing-format")
+                .help("Specify logging format")
                 .long("tracing-format")
                 .possible_values(TraceFormat::possible_values())
+                .ignore_case(false),
+        )
+        .arg(
+            Arg::new("tracing-filter")
+                .help("Specify logging and tracing level filters")
+                .long("tracing-filter")
+                .takes_value(true)
                 .ignore_case(false),
         )
         .get_matches()

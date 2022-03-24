@@ -12,14 +12,14 @@ mod traces;
 async fn main() -> Result<()> {
     let args = cli::arg_matches();
     let settings = settings::Settings::new(&args)?;
-    traces::init(settings.tracing());
+    traces::init(settings.tracing())?;
 
     match args.subcommand() {
         Some(("migrate", args)) => match args.subcommand() {
             Some(("up", _args)) => println!("migrate up!"),
             Some(("down", _args)) => println!("migrate down!"),
             _ => unreachable!(),
-        }
+        },
         Some(("config", args)) => match args.subcommand() {
             Some(("defaults", _)) => println!("{}", settings::Settings::default().to_yaml()?),
             Some(("merged", _)) => println!("{}", &settings.to_yaml()?),

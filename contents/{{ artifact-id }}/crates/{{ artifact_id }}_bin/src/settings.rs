@@ -72,6 +72,7 @@ impl Settings {
         mappings.insert("host".into(), "server.host".into());
         mappings.insert("temp-db".into(), "persistence.temporary".into());
         mappings.insert("tracing-format".into(), "tracing.format".into());
+        mappings.insert("tracing-filter".into(), "tracing.filter".into());
         // mappings.insert("database-url".into(), "persistence.database.url".into());
         let config = config.add_source(Clap::new(args.clone(), mappings));
 
@@ -81,14 +82,28 @@ impl Settings {
     }
 }
 
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct TraceSettings {
     format: TraceFormat,
+    filter: String,
 }
 
 impl TraceSettings {
     pub fn format(&self) -> &TraceFormat {
         &self.format
+    }
+
+    pub fn filter(&self) -> &str {
+        self.filter.as_str()
+    }
+}
+
+impl Default for TraceSettings {
+    fn default() -> Self {
+        TraceSettings {
+            format: Default::default(),
+            filter: "info".to_string(),
+        }
     }
 }
 

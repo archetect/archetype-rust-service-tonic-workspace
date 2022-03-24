@@ -1,7 +1,11 @@
 #![allow(non_camel_case_types)]
 
+use anyhow::Result;
 use clap::{ArgEnum, PossibleValue};
 use serde::{Deserialize, Serialize};
+use std::env;
+use tracing_subscriber::prelude::*;
+use tracing_subscriber::{fmt, EnvFilter};
 
 use crate::settings::TraceSettings;
 
@@ -26,22 +30,32 @@ impl Default for TraceFormat {
     }
 }
 
-pub fn init(settings: &TraceSettings) {
+pub fn init(settings: &TraceSettings) -> Result<()> {
+    let mut filter = EnvFilter::new(settings.filter());
+    if let Ok(rust_log) = env::var(EnvFilter::DEFAULT_ENV) {
+        filter = filter.add_directive(rust_log.parse()?);
+    }
+
     match settings.format() {
         TraceFormat::standard => {
-            tracing_subscriber::fmt().with_max_level(tracing::Level::INFO).init();
+            tracing_subscriber::registry()
+                .with(fmt::layer().with_ansi(atty::is(atty::Stream::Stdout)))
+                .with(filter)
+                .init();
         }
         TraceFormat::json => {
-            tracing_subscriber::fmt()
-                .json()
-                .with_max_level(tracing::Level::INFO)
+            tracing_subscriber::registry()
+                .with(fmt::layer().json())
+                .with(filter)
                 .init();
         }
         TraceFormat::pretty => {
-            tracing_subscriber::fmt()
-                .pretty()
-                .with_max_level(tracing::Level::INFO)
+            tracing_subscriber::registry()
+                .with(fmt::layer().pretty().with_ansi(atty::is(atty::Stream::Stdout)))
+                .with(filter)
                 .init();
         }
-    }
+    };
+
+    Ok(())
 }

@@ -4,8 +4,8 @@ use anyhow::Result;
 pub use sea_orm;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 use sea_schema::migration::migrator::MigratorTrait;
-use testcontainers_async::{DatabaseContainer, Image};
 use testcontainers_async::modules::postgresql::{PostgresContainer, PostgresImage};
+use testcontainers_async::{DatabaseContainer, Image};
 
 use crate::settings::PersistenceSettings;
 

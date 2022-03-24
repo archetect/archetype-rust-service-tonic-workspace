@@ -1,5 +1,5 @@
-use anyhow::Result;
 use crate::settings::ServerSettings;
+use anyhow::Result;
 use {{ artifact_id }}_core::{
     proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer, {{ ArtifactId }}Core,
 };
