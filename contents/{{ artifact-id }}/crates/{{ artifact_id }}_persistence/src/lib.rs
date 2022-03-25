@@ -36,12 +36,14 @@ impl {{ ArtifactId }}Persistence {
                 .start_container()
                 .await?;
 
+            let connect_url = temp_db.connect_url().await?;
+            tracing::info!("TestContainer RDBC URL: {connect_url}");
             let jdbc_url = temp_db.jdbc_url().await?;
             tracing::info!("TestContainer JDBC URL: {jdbc_url}");
             let connect_cli = temp_db.connect_cli().await?;
             tracing::info!("TestContainer Connect CLI: {connect_cli}");
 
-            (temp_db.connect_url().await?, Some(Arc::new(temp_db)))
+            (connect_url, Some(Arc::new(temp_db)))
         } else {
             (settings.database().url().to_string(), None)
         };
