@@ -9,7 +9,15 @@ pub fn arg_matches() -> ArgMatches {
                 .subcommand_required(true)
                 .about("Database Migrations")
                 .subcommand(Command::new("up").about("Apply migrations"))
-                .subcommand(Command::new("down").about("Un-apply migrations")),
+                .subcommand(
+                    Command::new("down")
+                        .about("Roll back migrations.  Rolls back a single migration at a time, by default.")
+                        .arg(
+                            Arg::new("all")
+                                .help("Rollback ALL migrations.  This will effectively destroy your entire database!")
+                                .long("all"),
+                        ),
+                ),
         )
         .subcommand(
             Command::new("config")
@@ -44,6 +52,11 @@ pub fn arg_matches() -> ArgMatches {
             Arg::new("temp-db")
                 .help("Initialize and migrate an ephemeral database")
                 .long("temp-db"),
+        )
+        .arg(
+            Arg::new("migrate")
+                .help("Whether or not to automatically migrate the database")
+                .long("migrate"),
         )
         .arg(
             Arg::new("database-url")

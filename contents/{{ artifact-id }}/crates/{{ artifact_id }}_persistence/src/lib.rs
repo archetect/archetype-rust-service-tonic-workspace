@@ -3,7 +3,7 @@ use std::sync::Arc;
 use anyhow::Result;
 pub use sea_orm;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
-use sea_schema::migration::migrator::MigratorTrait;
+pub use sea_schema::migration::migrator::MigratorTrait;
 use testcontainers_async::modules::postgresql::{PostgresContainer, PostgresImage};
 use testcontainers_async::{DatabaseContainer, Image};
 
@@ -66,9 +66,9 @@ impl {{ ArtifactId }}Persistence {
 
         let connection: DatabaseConnection = Database::connect(options).await?;
 
-        migrations::Migrator::up(&connection, None)
-            .await
-            .expect("Error performing migrations");
+        if settings.migrate().or(Some(true)).unwrap() || temp_db.is_some() {
+            migrations::Migrator::up(&connection, None).await?;
+        }
 
         Ok({{ ArtifactId }}Persistence { connection, temp_db })
     }

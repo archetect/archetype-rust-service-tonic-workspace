@@ -8,6 +8,8 @@ const DEFAULT_DATABASE_URL: &str = "postgres://test@localhost/{{ prefix_name }}-
 pub struct PersistenceSettings {
     #[serde(skip_serializing_if = "Option::is_none")]
     temporary: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    migrate: Option<bool>,
     database: DatabaseSettings,
 }
 
@@ -23,6 +25,14 @@ impl PersistenceSettings {
 
     pub fn database(&self) -> &DatabaseSettings {
         &self.database
+    }
+
+    pub fn migrate(&self) -> Option<bool> {
+        self.migrate
+    }
+
+    pub fn set_migrate(&mut self, migrate: Option<bool>) {
+        self.migrate = migrate;
     }
 }
 

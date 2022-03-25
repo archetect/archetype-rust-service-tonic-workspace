@@ -27,6 +27,10 @@ impl Settings {
         &self.persistence
     }
 
+    pub fn persistence_mut(&mut self) -> &mut PersistenceSettings {
+        &mut self.persistence
+    }
+
     pub fn tracing(&self) -> &TraceSettings {
         &self.tracing
     }
@@ -73,6 +77,7 @@ impl Settings {
         // mappings.insert("management-port".into(), "server.management.port".into());
         mappings.insert("host".into(), "server.host".into());
         mappings.insert("temp-db".into(), "persistence.temporary".into());
+        mappings.insert("migrate".into(), "persistence.migrate".into());
         mappings.insert("tracing-format".into(), "tracing.format".into());
         mappings.insert("tracing-filter".into(), "tracing.filter".into());
         mappings.insert("database-url".into(), "persistence.database.url".into());
