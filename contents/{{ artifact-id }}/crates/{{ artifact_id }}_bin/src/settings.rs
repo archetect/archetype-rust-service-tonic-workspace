@@ -8,7 +8,7 @@ use crate::traces::TraceFormat;
 use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 use {{ artifact_id }}_server::settings::ServerSettings;
 
-const DEFAULT_CONFIG_FILE: &str = "{{ prefix-name }}-service";
+const DEFAULT_CONFIG_FILE: &str = "{{ artifact-id }}";
 const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
 
 #[derive(Debug, Default, Serialize, Deserialize)]
