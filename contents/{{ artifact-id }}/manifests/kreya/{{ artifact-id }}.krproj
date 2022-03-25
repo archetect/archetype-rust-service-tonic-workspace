@@ -1,0 +1,16 @@
+{
+  "id": "{{ uuid() }}",
+  "importStreams": [
+    {
+      "id": "{{ uuid() }}",
+      "name": "grpc-server-reflection",
+      "importerName": "GrpcServerReflection",
+      "createMissingOperations": true,
+      "options": {
+        "endpoint": "http://localhost:{{ service-port }}"
+      }
+    }
+  ],
+  "authConfigs": [],
+  "certificates": []
+}

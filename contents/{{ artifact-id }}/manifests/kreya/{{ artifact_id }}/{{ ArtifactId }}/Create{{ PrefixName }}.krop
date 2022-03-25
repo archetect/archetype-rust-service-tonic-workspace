@@ -1,0 +1,12 @@
+{
+  "details": {
+    "methodFqn": "{{ artifact_id }}.{{ ArtifactId }}.Create{{ PrefixName }}"
+  },
+  "requests": [
+    {
+      "location": "Create{{ PrefixName }}-request.json"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "grpc"
+}

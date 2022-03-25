@@ -1,0 +1,12 @@
+{
+  "details": {
+    "methodFqn": "{{ artifact_id }}.{{ ArtifactId }}.Get{{ PrefixName }}List"
+  },
+  "requests": [
+    {
+      "location": "Get{{ PrefixName }}List-request.json"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "grpc"
+}

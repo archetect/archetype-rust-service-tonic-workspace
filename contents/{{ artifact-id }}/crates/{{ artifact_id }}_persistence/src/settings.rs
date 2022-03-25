@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use url::Url;
 
-const DEFAULT_DATABASE_URL: &str = "postgres://test@localhost/{{ prefix_name }}-service";
+const DEFAULT_DATABASE_URL: &str = "postgres://test@localhost/{{ prefix-name }}-service";
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct PersistenceSettings {

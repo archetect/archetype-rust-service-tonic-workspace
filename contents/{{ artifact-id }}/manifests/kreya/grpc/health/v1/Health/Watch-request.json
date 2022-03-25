@@ -1,0 +1,3 @@
+{
+  "service": "{{ artifact_id }}.{{ ArtifactId }}"
+}

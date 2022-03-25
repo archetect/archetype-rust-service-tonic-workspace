@@ -3,7 +3,7 @@ use clap::{command, Arg, ArgMatches, Command};
 
 pub fn arg_matches() -> ArgMatches {
     command!()
-        .name("{{ prefix_name }}-service")
+        .name("{{ artifact-id }}")
         .subcommand(
             Command::new("migrate")
                 .subcommand_required(true)

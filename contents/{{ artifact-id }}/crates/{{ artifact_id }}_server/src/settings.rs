@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 const DEFAULT_HOST: &str = "0.0.0.0";
-const DEFAULT_SERVICE_PORT: u16 = 8080;
-const DEFAULT_MANAGEMENT_PORT: u16 = 8081;
+const DEFAULT_SERVICE_PORT: u16 = {{ service-port }};
+const DEFAULT_MANAGEMENT_PORT: u16 = {{ management-port }};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerSettings {

@@ -1,0 +1,5 @@
+{
+  "id": "{{ uuid() }}",
+  "color": "#60A5FA",
+  "globalContent": {}
+}

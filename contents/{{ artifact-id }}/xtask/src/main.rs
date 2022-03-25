@@ -5,7 +5,7 @@ use clap::{ArgMatches, Command};
 
 const PG_USERNAME: &str = "test";
 const PG_DOCKER_NAME: &'static str = "postgres-xtask";
-const SERVICE_NAME: &str = "{{ prefix_name }}-service";
+const SERVICE_NAME: &str = "{{ prefix-name }}-service";
 
 fn main() -> Result<()> {
     let args = clap::command!()

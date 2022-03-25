@@ -31,7 +31,7 @@ impl {{ ArtifactId }}Persistence {
     pub async fn new_with_settings(settings: &PersistenceSettings) -> Result<{{ ArtifactId }}Persistence> {
         let (connect_url, temp_db) = if let Some(true) = settings.temporary() {
             let temp_db = PostgresImage::default()
-                .with_database("{{ prefix_name }}-service")
+                .with_database("{{ prefix-name }}-service")
                 .with_username("test")
                 .start_container()
                 .await?;
