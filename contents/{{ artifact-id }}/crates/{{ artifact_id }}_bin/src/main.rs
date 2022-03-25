@@ -10,6 +10,7 @@ mod traces;
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    dotenv::dotenv().ok();
     let args = cli::arg_matches();
     let mut settings = settings::Settings::new(&args)?;
     traces::init(settings.tracing())?;

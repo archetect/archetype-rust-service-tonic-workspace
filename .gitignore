@@ -11,6 +11,9 @@
 *.ipr
 *.iml
 
+# VSCode
+.vscode/
+
 # Eclipse project files
 .project
 .classpath
