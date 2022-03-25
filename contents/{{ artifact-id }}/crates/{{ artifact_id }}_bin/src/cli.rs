@@ -30,7 +30,6 @@ pub fn arg_matches() -> ArgMatches {
             Arg::new("host")
                 .help("The host the server listens on.")
                 .long("host")
-                .short('h')
                 .takes_value(true),
         )
         .arg(
@@ -44,10 +43,13 @@ pub fn arg_matches() -> ArgMatches {
         .arg(
             Arg::new("temp-db")
                 .help("Initialize and migrate an ephemeral database")
-                .long("temp-db")
-                .takes_value(true)
-                .possible_value("drop")
-                .possible_value("retain"),
+                .long("temp-db"),
+        )
+        .arg(
+            Arg::new("database-url")
+                .help("Database URL")
+                .long("database-url")
+                .takes_value(true),
         )
         .arg(
             Arg::new("tracing-format")

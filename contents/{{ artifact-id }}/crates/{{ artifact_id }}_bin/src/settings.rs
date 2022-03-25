@@ -8,7 +8,7 @@ use crate::traces::TraceFormat;
 use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 use {{ artifact_id }}_server::settings::ServerSettings;
 
-const DEFAULT_CONFIG_FILE: &str = "etc/{{ prefix_name }}-service";
+const DEFAULT_CONFIG_FILE: &str = "{{ prefix_name }}-service";
 const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
 
 #[derive(Debug, Default, Serialize, Deserialize)]
@@ -40,7 +40,7 @@ impl Settings {
     pub fn new(args: &ArgMatches) -> Result<Self, ConfigError> {
         let config = Config::builder();
 
-        // Defaults
+        // Load Defaults
         let config = config.add_source(File::from_str(
             Settings::default()
                 .to_yaml()
@@ -49,11 +49,10 @@ impl Settings {
             config::FileFormat::Yaml,
         ));
 
+        // Merge Config File from Default Location
         let config = config.add_source(File::with_name(DEFAULT_CONFIG_FILE).required(false));
 
-        let config = config.add_source(Environment::with_prefix(DEFAULT_ENVIRONMENT_PREFIX).separator("_"));
-
-        // Merge in a config file specified on the command line
+        // Merge Config File specified from Command Line
         let config = if let Some(config_file) = args.value_of("config-file") {
             if let Ok(config_file) = shellexpand::full(config_file) {
                 let config = config.add_source(File::with_name(config_file.as_ref()).required(true));
@@ -65,7 +64,10 @@ impl Settings {
             config
         };
 
-        // Merge in command line overrides
+        // Merge Environment Variable Overrides
+        let config = config.add_source(Environment::with_prefix(DEFAULT_ENVIRONMENT_PREFIX).separator("_"));
+
+        // Merge Command Line overrides
         let mut mappings = HashMap::new();
         mappings.insert("service-port".into(), "server.service.port".into());
         // mappings.insert("management-port".into(), "server.management.port".into());
@@ -73,7 +75,7 @@ impl Settings {
         mappings.insert("temp-db".into(), "persistence.temporary".into());
         mappings.insert("tracing-format".into(), "tracing.format".into());
         mappings.insert("tracing-filter".into(), "tracing.filter".into());
-        // mappings.insert("database-url".into(), "persistence.database.url".into());
+        mappings.insert("database-url".into(), "persistence.database.url".into());
         let config = config.add_source(Clap::new(args.clone(), mappings));
 
         let conf = config.build()?;

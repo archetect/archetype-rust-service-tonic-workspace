@@ -29,18 +29,22 @@ impl {{ ArtifactId }}Persistence {
     }
 
     pub async fn new_with_settings(settings: &PersistenceSettings) -> Result<{{ ArtifactId }}Persistence> {
-        let temp_db = PostgresImage::default()
-            .with_database("{{ prefix_name }}-service")
-            .with_username("test")
-            .start_container()
-            .await?;
+        let (connect_url, temp_db) = if let Some(true) = settings.temporary() {
+            let temp_db = PostgresImage::default()
+                .with_database("{{ prefix_name }}-service")
+                .with_username("test")
+                .start_container()
+                .await?;
 
-        let jdbc_url = temp_db.jdbc_url().await?;
-        tracing::info!("TestContainer JDBC URL: {jdbc_url}");
-        let connect_cli = temp_db.connect_cli().await?;
-        tracing::info!("TestContainer Connect CLI: {connect_cli}");
+            let jdbc_url = temp_db.jdbc_url().await?;
+            tracing::info!("TestContainer JDBC URL: {jdbc_url}");
+            let connect_cli = temp_db.connect_cli().await?;
+            tracing::info!("TestContainer Connect CLI: {connect_cli}");
 
-        let connect_url = temp_db.connect_url().await?;
+            (temp_db.connect_url().await?, Some(Arc::new(temp_db)))
+        } else {
+            (settings.database().url().to_string(), None)
+        };
 
         let mut options = ConnectOptions::new(connect_url);
         if let Some(value) = settings.database().max_connections() {
@@ -66,10 +70,7 @@ impl {{ ArtifactId }}Persistence {
             .await
             .expect("Error performing migrations");
 
-        Ok({{ ArtifactId }}Persistence {
-            connection,
-            temp_db: Some(Arc::new(temp_db)),
-        })
+        Ok({{ ArtifactId }}Persistence { connection, temp_db })
     }
 
     pub fn connection(&self) -> &DatabaseConnection {

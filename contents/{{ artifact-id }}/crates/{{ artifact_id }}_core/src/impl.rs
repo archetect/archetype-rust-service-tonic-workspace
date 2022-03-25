@@ -12,7 +12,6 @@ use crate::{
 
 #[tonic::async_trait]
 impl {{ ArtifactId }} for {{ ArtifactId }}Core {
-    #[tracing::instrument]
     async fn create_{{ prefix_name }}(
         &self,
         request: Request<Create{{ PrefixName }}Request>,
@@ -35,7 +34,6 @@ impl {{ ArtifactId }} for {{ ArtifactId }}Core {
         Err(Status::internal("Unexpected Error"))
     }
 
-    #[tracing::instrument]
     async fn get_{{ prefix_name }}_list(
         &self,
         request: Request<Get{{ PrefixName }}ListRequest>,
