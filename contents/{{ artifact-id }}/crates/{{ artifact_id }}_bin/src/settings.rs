@@ -1,4 +1,6 @@
 use std::collections::HashMap;
+use std::fs::OpenOptions;
+use std::io::Write;
 
 use clap::ArgMatches;
 use config::{Config, ConfigError, Environment, File, Source, Value};
@@ -37,6 +39,22 @@ impl Settings {
 
     pub fn to_yaml(&self) -> Result<String, serde_yaml::Error> {
         serde_yaml::to_string(self)
+    }
+
+    pub fn generate(&self) -> Result<(), anyhow::Error> {
+        let mut file = OpenOptions::new()
+            .read(true)
+            .write(true) // <--------- this
+            .create(true)
+            .open(format!("{DEFAULT_CONFIG_FILE}.yaml"))
+            ?;
+        file.write(self.to_yaml()?.as_bytes())?;
+        Ok(())
+    }
+
+    pub fn print(&self) -> Result<(), anyhow::Error> {
+        println!("{}", self.to_yaml()?);
+        Ok(())
     }
 }
 

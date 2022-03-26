@@ -31,8 +31,9 @@ async fn main() -> Result<()> {
             _ => unreachable!(),
         },
         Some(("config", args)) => match args.subcommand() {
-            Some(("defaults", _)) => println!("{}", settings::Settings::default().to_yaml()?),
-            Some(("merged", _)) => println!("{}", &settings.to_yaml()?),
+            Some(("defaults", _)) => settings::Settings::default().print()?,
+            Some(("merged", _)) => settings.print()?,
+            Some(("generate", _)) => settings.generate()?,
             _ => unreachable!(),
         },
         Some((_command, _args)) => {

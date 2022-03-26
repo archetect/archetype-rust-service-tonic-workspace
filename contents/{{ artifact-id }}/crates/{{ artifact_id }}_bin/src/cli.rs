@@ -1,5 +1,6 @@
+use clap::{Arg, ArgMatches, command, Command};
+
 use crate::traces::TraceFormat;
-use clap::{command, Arg, ArgMatches, Command};
 
 pub fn arg_matches() -> ArgMatches {
     command!()
@@ -24,8 +25,13 @@ pub fn arg_matches() -> ArgMatches {
                 .about("Configuration Operations")
                 .subcommand_required(true)
                 .arg_required_else_help(true)
-                .subcommand(Command::new("defaults").about("Displays the default settings"))
-                .subcommand(Command::new("merged").about("Displays the effective settings from all merged sources.")),
+                .subcommand(Command::new("defaults")
+                    .about("Displays the default settings"))
+                .subcommand(Command::new("merged")
+                    .about("Displays the effective settings from all merged sources."))
+                .subcommand(Command::new("generate")
+                    .about("Generate the effective settings in an adjacent yml file, overwriting existing config."))
+            ,
         )
         .arg(
             Arg::new("config-file")
@@ -51,7 +57,10 @@ pub fn arg_matches() -> ArgMatches {
         .arg(
             Arg::new("temp-db")
                 .help("Initialize and migrate an ephemeral database")
-                .long("temp-db"),
+                .long("temp-db")
+                .default_missing_value("true")
+                .possible_values(&["true", "false"])
+            ,
         )
         .arg(
             Arg::new("migrate")
