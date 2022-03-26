@@ -1,7 +1,7 @@
 use anyhow::Result;
 
 use {{ artifact_id }}_core::{{ ArtifactId }}Core;
-use {{ artifact_id }}_persistence::{migrations::Migrator, {{ ArtifactId }}Persistence, MigratorTrait};
+use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
 use {{ artifact_id }}_server::{{ ArtifactId }}Server;
 
 mod cli;
@@ -19,14 +19,14 @@ async fn main() -> Result<()> {
         Some(("migrate", args)) => match args.subcommand() {
             Some(("up", _args)) => {
                 settings.persistence_mut().set_migrate(Some(false));
-                let persistence = {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?;
-                Migrator::up(persistence.connection(), None).await?;
+                {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?
+                    .migrate_up(None).await?;
             }
             Some(("down", args)) => {
                 let steps = if args.is_present("all") { None } else { Some(1) };
                 settings.persistence_mut().set_migrate(Some(false));
-                let persistence = {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?;
-                Migrator::down(persistence.connection(), steps).await?;
+                {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?
+                    .migrate_down(steps).await?;
             }
             _ => unreachable!(),
         },

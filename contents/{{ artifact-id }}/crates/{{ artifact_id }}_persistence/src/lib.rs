@@ -3,7 +3,7 @@ use std::sync::Arc;
 use anyhow::Result;
 pub use sea_orm;
 use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
-pub use sea_schema::migration::migrator::MigratorTrait;
+use sea_schema::migration::migrator::MigratorTrait;
 use testcontainers_async::modules::postgresql::{PostgresContainer, PostgresImage};
 use testcontainers_async::{DatabaseContainer, Image};
 
@@ -11,7 +11,7 @@ use crate::settings::PersistenceSettings;
 
 pub mod entities;
 mod r#impl;
-pub mod migrations;
+mod migrations;
 pub mod settings;
 
 pub type DbResult<T> = core::result::Result<T, DbErr>;
@@ -31,7 +31,7 @@ impl {{ ArtifactId }}Persistence {
     pub async fn new_with_settings(settings: &PersistenceSettings) -> Result<{{ ArtifactId }}Persistence> {
         let (connect_url, temp_db) = if let Some(true) = settings.temporary() {
             let temp_db = PostgresImage::default()
-                .with_database("{{ prefix-name }}-service")
+                .with_database("{{ artifact-id }}")
                 .with_username("test")
                 .start_container()
                 .await?;
@@ -77,6 +77,14 @@ impl {{ ArtifactId }}Persistence {
 
     pub fn connection(&self) -> &DatabaseConnection {
         &self.connection
+    }
+
+    pub async fn migrate_up(&self, steps: Option<u32>) -> DbResult<()> {
+        migrations::Migrator::up(self.connection(), steps).await
+    }
+
+    pub async fn migrate_down(&self, steps: Option<u32>) -> DbResult<()> {
+        migrations::Migrator::down(self.connection(), steps).await
     }
 }
 
