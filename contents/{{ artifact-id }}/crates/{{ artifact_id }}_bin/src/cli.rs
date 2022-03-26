@@ -47,6 +47,13 @@ pub fn arg_matches() -> ArgMatches {
                 .takes_value(true),
         )
         .arg(
+            Arg::new("log-sql")
+                .help("Turns sql logging on or off.")
+                .long("log-sql")
+                .default_missing_value("true")
+                .possible_values(&["true", "false"]),
+        )
+        .arg(
             Arg::new("service-port")
                 .help("Service Port")
                 .short('p')

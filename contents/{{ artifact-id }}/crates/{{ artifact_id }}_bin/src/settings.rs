@@ -91,14 +91,15 @@ impl Settings {
 
         // Merge Command Line overrides
         let mut mappings = HashMap::new();
-        mappings.insert("service-port".into(), "server.service.port".into());
-        // mappings.insert("management-port".into(), "server.management.port".into());
+        mappings.insert("database-url".into(), "persistence.database.url".into());
         mappings.insert("host".into(), "server.host".into());
-        mappings.insert("temp-db".into(), "persistence.temporary".into());
+        mappings.insert("log-sql".into(), "persistence.database.log_sql".into());
+        // mappings.insert("management-port".into(), "server.management.port".into());
         mappings.insert("migrate".into(), "persistence.migrate".into());
+        mappings.insert("service-port".into(), "server.service.port".into());
+        mappings.insert("temp-db".into(), "persistence.temporary".into());
         mappings.insert("tracing-format".into(), "tracing.format".into());
         mappings.insert("tracing-filter".into(), "tracing.filter".into());
-        mappings.insert("database-url".into(), "persistence.database.url".into());
         let config = config.add_source(Clap::new(args.clone(), mappings));
 
         let conf = config.build()?;
