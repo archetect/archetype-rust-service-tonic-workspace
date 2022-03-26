@@ -45,7 +45,7 @@ pub fn init(settings: &TraceSettings) -> Result<()> {
         }
         TraceFormat::json => {
             tracing_subscriber::registry()
-                .with(fmt::layer().json())
+                .with(fmt::layer().json().flatten_event(true))
                 .with(filter)
                 .init();
         }
