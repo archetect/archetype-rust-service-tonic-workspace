@@ -7,6 +7,7 @@ use config::{Config, ConfigError, Environment, File, Source, Value};
 use serde::{Deserialize, Serialize};
 
 use crate::traces::TraceFormat;
+use {{ artifact_id }}_core::settings::CoreSettings;
 use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 use {{ artifact_id }}_server::settings::ServerSettings;
 
@@ -16,6 +17,7 @@ const DEFAULT_ENVIRONMENT_PREFIX: &str = "APPLICATION";
 #[derive(Debug, Default, Serialize, Deserialize)]
 pub struct Settings {
     server: ServerSettings,
+    core: CoreSettings,
     persistence: PersistenceSettings,
     tracing: TraceSettings,
 }
