@@ -42,7 +42,7 @@ async fn main() -> Result<()> {
         None => {
             tracing::info!("Initializing...");
             let persistence = {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?;
-            let core = {{ ArtifactId }}Core::new(persistence).await?;
+            let core = {{ ArtifactId }}Core::new_with_settings(persistence, settings.core()).await?;
             let server = {{ ArtifactId }}Server::builder_with_settings(core, settings.server())
                 .build()
                 .await?;

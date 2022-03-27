@@ -5,6 +5,7 @@ pub mod settings;
 use anyhow::Result;
 
 use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
+use crate::settings::CoreSettings;
 
 pub mod proto {
     tonic::include_proto!("{{ artifact_id }}");
@@ -19,6 +20,10 @@ pub struct {{ ArtifactId }}Core {
 
 impl {{ ArtifactId }}Core {
     pub async fn new(persistence: {{ ArtifactId }}Persistence) -> Result<{{ ArtifactId }}Core> {
-        Ok({{ ArtifactId }}Core { persistence })
+        {{ ArtifactId }}Core::new_with_settings(persistence, &Default::default()).await
+    }
+
+    pub async fn new_with_settings(persistence: {{ ArtifactId }}Persistence, _settings: &CoreSettings) -> Result<{{ ArtifactId }}Core> {
+        Ok({{ ArtifactId }}Core{ persistence })
     }
 }

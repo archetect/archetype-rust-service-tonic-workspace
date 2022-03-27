@@ -27,6 +27,10 @@ impl Settings {
         &self.server
     }
 
+    pub fn core(&self) -> &CoreSettings {
+        &self.core
+    }
+
     pub fn persistence(&self) -> &PersistenceSettings {
         &self.persistence
     }
