@@ -3,7 +3,6 @@ use std::str::FromStr;
 use tonic::Status;
 use {{ artifact_id }}_persistence::{
     entities::*,
-    entities::{{ prefix_name }}::ActiveModel,
     sea_orm::ActiveValue,
     sea_orm::prelude::Uuid
 };
@@ -29,22 +28,31 @@ impl ConvertFrom<{{ prefix_name }}::Model> for {{ PrefixName }} {
     }
 }
 
-impl ConvertTo<ActiveModel> for {{ PrefixName }} {
-
-    fn convert_to(self) -> std::result::Result<ActiveModel, Status> {
-        let id = match self.id {
-            None => {
-                ActiveValue::not_set()
-            }
-            Some(id) => {
-                Uuid::from_str(id.value.as_str())
-                    .map_err(|err|Status::invalid_argument(err.to_string()))
-                    .map(ActiveValue::Set)?
-            }
-        };
-        Ok(ActiveModel {
-            id,
+impl ConvertTo<{{ prefix_name }}::ActiveModel> for {{ PrefixName }} {
+    fn convert_to(self) -> std::result::Result<{{ prefix_name }}::ActiveModel, Status> {
+        Ok({{ prefix_name }}::ActiveModel {
+            id: ActiveValue::Set(self.id.convert_to()?),
             contents: ActiveValue::Set(self.contents),
         })
+    }
+}
+
+impl ConvertTo<Uuid> for Option<Id> {
+    fn convert_to(self) -> Result<Uuid, Status> {
+        match self {
+            None => {
+                return Err(Status::invalid_argument("Id is required".to_string()));
+            }
+            Some(id) => {
+                id.convert_to()
+            }
+        }
+    }
+}
+
+impl ConvertTo<Uuid> for Id {
+    fn convert_to(self) -> Result<Uuid, Status> {
+        Uuid::from_str(self.value.as_str())
+            .map_err(|_|Status::invalid_argument("Id was not set to a valid UUID".to_string()))
     }
 }
