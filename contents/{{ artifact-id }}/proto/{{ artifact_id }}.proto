@@ -4,6 +4,12 @@ package {{ artifact_id }};
 
 import "google/protobuf/wrappers.proto";
 
+service {{ ArtifactId }} {
+    rpc Create{{ PrefixName }}(Create{{ PrefixName }}Request) returns (Create{{ PrefixName }}Response) {}
+    rpc Update{{ PrefixName }}(Update{{ PrefixName }}Request) returns (Update{{ PrefixName }}Response) {}
+    rpc Get{{ PrefixName }}List(Get{{ PrefixName }}ListRequest) returns (Get{{ PrefixName }}ListResponse) {}
+}
+
 message Id {
     string value = 1;
 }
@@ -21,6 +27,14 @@ message Create{{ PrefixName }}Response {
     {{ PrefixName }} record = 1;
 }
 
+message Update{{ PrefixName }}Request {
+    {{ PrefixName }} record = 1;
+}
+
+message Update{{ PrefixName }}Response {
+    {{ PrefixName }} record = 1;
+}
+
 message Get{{ PrefixName }}ListRequest {
     uint32 page_size = 1;
     uint32 page = 2;
@@ -29,9 +43,4 @@ message Get{{ PrefixName }}ListRequest {
 message Get{{ PrefixName }}ListResponse {
     repeated {{ PrefixName }} record = 1;
     uint32 total_pages = 2;
-}
-
-service {{ ArtifactId }} {
-    rpc Create{{ PrefixName }}(Create{{ PrefixName }}Request) returns (Create{{ PrefixName }}Response) {}
-    rpc Get{{ PrefixName }}List(Get{{ PrefixName }}ListRequest) returns (Get{{ PrefixName }}ListResponse) {}
 }

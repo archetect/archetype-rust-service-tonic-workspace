@@ -3,6 +3,7 @@ use {{ artifact_id }}_persistence::entities::*;
 use {{ artifact_id }}_persistence::sea_orm::prelude::*;
 use {{ artifact_id }}_persistence::sea_orm::*;
 use {{ artifact_id }}_persistence::{{'{'}}{{ ArtifactId }}Persistence, DbResult, Page};
+use {{ artifact_id }}_persistence::settings::PersistenceSettings;
 
 #[tokio::test]
 async fn test_insert_{{ prefix_name }}() -> Result<()> {
@@ -10,6 +11,22 @@ async fn test_insert_{{ prefix_name }}() -> Result<()> {
 
     let {{ prefix_name }} = insert_{{ prefix_name }}(&persistence).await?;
     assert_eq!(&{{ prefix_name }}.contents, "Hello World!");
+
+    println!("{:?}", {{ prefix_name }});
+    Ok(())
+}
+
+#[tokio::test]
+async fn test_update_{{ prefix_name }}() -> Result<()> {
+    let persistence = persistence().await?;
+
+    let {{ prefix_name }} = insert_{{ prefix_name }}(&persistence).await?;
+    assert_eq!(&{{ prefix_name }}.contents, "Hello, World!");
+
+    let mut {{ prefix_name }} = {{ prefix_name }}.into_active_model();
+    {{ prefix_name }}.contents = Set("Goodbye, World!".to_owned());
+    let {{ prefix_name }} = persistence.update_{{ prefix_name }}({{ prefix_name }}).await?;
+    assert_eq!(&{{ prefix_name }}.contents, "Goodbye, World!");
 
     println!("{:?}", {{ prefix_name }});
     Ok(())
@@ -45,12 +62,13 @@ async fn test_list_{{ prefix_name }}s() -> Result<()> {
 async fn insert_{{ prefix_name }}(persistence: &{{ ArtifactId }}Persistence) -> DbResult<{{ prefix_name }}::Model> {
     let {{ prefix_name }}_record = {{ prefix_name }}::ActiveModel {
         id: Set(Uuid::new_v4()),
-        contents: Set("Hello World!".to_owned()),
+        contents: Set("Hello, World!".to_owned()),
     };
 
     persistence.insert_{{ prefix_name }}({{ prefix_name }}_record).await
 }
 
 async fn persistence() -> Result<{{ ArtifactId }}Persistence> {
-    {{ ArtifactId }}Persistence::new().await
+    let settings = PersistenceSettings::default().with_temporary(true);
+    {{ ArtifactId }}Persistence::new_with_settings(&settings).await
 }
