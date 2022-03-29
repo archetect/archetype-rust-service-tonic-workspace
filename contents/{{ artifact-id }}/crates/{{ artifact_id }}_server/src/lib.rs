@@ -1,7 +1,8 @@
 use crate::settings::ServerSettings;
 use anyhow::Result;
 use {{ artifact_id }}_core::{
-    proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer, {{ ArtifactId }}Core,
+    proto::{{ artifact_id }}_server::{{ ArtifactId }}Server as {{ ArtifactId }}ProtoServer,
+    {{ ArtifactId }}Core,
 };
 use std::sync::Arc;
 use tokio::net::TcpListener;
@@ -20,31 +21,30 @@ pub struct {{ ArtifactId }}Server {
 }
 
 pub struct Builder {
-    host: String,
-    service_port: u16,
+    settings: ServerSettings,
     core: {{ ArtifactId }}Core,
 }
 
 impl Builder {
     pub fn new(core: {{ ArtifactId }}Core) -> Builder {
-        Builder::new_with_settings(core, &ServerSettings::default())
-    }
-
-    pub fn new_with_settings(core: {{ ArtifactId }}Core, settings: &ServerSettings) -> Builder {
         Builder {
-            host: settings.host().to_owned(),
-            service_port: settings.service().port(),
+            settings: ServerSettings::default(),
             core,
         }
     }
 
+    pub fn with_settings(mut self, settings: &ServerSettings) -> Builder {
+        self.settings = settings.clone();
+        self
+    }
+
     pub fn with_random_port(mut self) -> Builder {
-        self.service_port = 0;
+        self.settings.service_mut().set_port(0);
         self
     }
 
     pub async fn build(self) -> Result<{{ ArtifactId }}Server> {
-        let listener = TcpListener::bind((self.host, self.service_port)).await?;
+        let listener = TcpListener::bind((self.settings.host(), self.settings.service().port())).await?;
         let addr = listener.local_addr()?;
 
         Ok({{ ArtifactId }}Server {
@@ -58,10 +58,6 @@ impl Builder {
 impl {{ ArtifactId }}Server {
     pub fn builder(core: {{ ArtifactId }}Core) -> Builder {
         Builder::new(core)
-    }
-
-    pub fn builder_with_settings(core: {{ ArtifactId }}Core, settings: &ServerSettings) -> Builder {
-        Builder::new_with_settings(core, settings)
     }
 
     pub fn service_port(&self) -> u16 {

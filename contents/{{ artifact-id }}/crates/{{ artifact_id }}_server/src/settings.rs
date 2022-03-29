@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 const DEFAULT_HOST: &str = "0.0.0.0";
-const DEFAULT_SERVICE_PORT: u16 = {{ service-port }};
-const DEFAULT_MANAGEMENT_PORT: u16 = {{ management-port }};
+const DEFAULT_SERVICE_PORT: u16 = 8080;
+const DEFAULT_MANAGEMENT_PORT: u16 = 8081;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ServerSettings {
@@ -18,6 +18,10 @@ impl ServerSettings {
 
     pub fn service(&self) -> &ServiceSettings {
         &self.service
+    }
+
+    pub fn service_mut(&mut self) -> &mut ServiceSettings {
+        &mut self.service
     }
 
     pub fn management(&self) -> &ManagementSettings {
@@ -43,6 +47,16 @@ pub struct ServiceSettings {
 impl ServiceSettings {
     pub fn port(&self) -> u16 {
         self.port
+    }
+
+    pub fn set_port(&mut self, port: u16) -> &mut ServiceSettings {
+        self.port = port;
+        self
+    }
+
+    pub fn with_port(mut self, port: u16) -> Self {
+        self.port = port;
+        self
     }
 }
 

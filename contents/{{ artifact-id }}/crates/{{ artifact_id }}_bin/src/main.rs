@@ -19,14 +19,22 @@ async fn main() -> Result<()> {
         Some(("migrate", args)) => match args.subcommand() {
             Some(("up", _args)) => {
                 settings.persistence_mut().set_migrate(Some(false));
-                {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?
-                    .migrate_up(None).await?;
+                {{ ArtifactId }}Persistence::builder()
+                    .with_settings(settings.persistence())
+                    .build()
+                    .await?
+                    .migrate_up(None)
+                    .await?;
             }
             Some(("down", args)) => {
                 let steps = if args.is_present("all") { None } else { Some(1) };
                 settings.persistence_mut().set_migrate(Some(false));
-                {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?
-                    .migrate_down(steps).await?;
+                {{ ArtifactId }}Persistence::builder()
+                    .with_settings(settings.persistence())
+                    .build()
+                    .await?
+                    .migrate_down(steps)
+                    .await?;
             }
             _ => unreachable!(),
         },
@@ -41,11 +49,16 @@ async fn main() -> Result<()> {
         }
         None => {
             tracing::info!("Initializing...");
-            let persistence = {{ ArtifactId }}Persistence::new_with_settings(settings.persistence()).await?;
-            let core = {{ ArtifactId }}Core::new_with_settings(persistence, settings.core()).await?;
-            let server = {{ ArtifactId }}Server::builder_with_settings(core, settings.server())
+            let persistence = {{ ArtifactId }}Persistence::builder()
+                .with_settings(settings.persistence())
                 .build()
                 .await?;
+            let core = {{ ArtifactId }}Core::new_with_settings(persistence, settings.core()).await?;
+            let server = {{ ArtifactId }}Server::builder(core)
+                .with_settings(settings.server())
+                .build()
+                .await?;
+
             tokio::select! {
                 result = server.serve() => {
                   return result;

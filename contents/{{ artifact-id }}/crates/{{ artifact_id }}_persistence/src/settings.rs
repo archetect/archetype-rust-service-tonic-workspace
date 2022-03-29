@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use std::time::Duration;
 use url::Url;
 
-const DEFAULT_DATABASE_URL: &str = "postgres://test@localhost/{{ prefix-name }}-service";
+const DEFAULT_DATABASE_URL: &str = "postgres://test@localhost/{{ artifact-id }}";
 
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct PersistenceSettings {
@@ -14,11 +14,16 @@ pub struct PersistenceSettings {
 }
 
 impl PersistenceSettings {
-    pub fn temporary(&self) -> Option<bool> {
+    pub fn temp_db(&self) -> Option<bool> {
         self.temporary
     }
 
-    pub fn with_temporary(mut self, temporary: bool) -> PersistenceSettings {
+    pub fn set_temp_db(&mut self, temporary: bool) -> &mut PersistenceSettings {
+        self.temporary = Some(temporary);
+        self
+    }
+
+    pub fn with_temp_db(mut self, temporary: bool) -> PersistenceSettings {
         self.temporary = Some(temporary);
         self
     }

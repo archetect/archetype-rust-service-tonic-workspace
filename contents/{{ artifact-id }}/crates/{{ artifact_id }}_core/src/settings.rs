@@ -43,9 +43,7 @@ impl Default for CoreSettings {
     fn default() -> Self {
         // Put client defaults here
         let client_map = HashMap::new();
-        
-        CoreSettings {
-            clients: client_map,
-        }
+
+        CoreSettings { clients: client_map }
     }
 }

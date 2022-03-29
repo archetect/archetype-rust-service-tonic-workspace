@@ -25,7 +25,11 @@ impl MigrationTrait for Migration {
                             .primary_key()
                             .extra("DEFAULT gen_random_uuid()".to_owned()),
                     )
-                    .col(ColumnDef::new(entities::{{ prefix_name }}::Column::Contents).string().not_null())
+                    .col(
+                        ColumnDef::new(entities::{{ prefix_name }}::Column::Contents)
+                            .string()
+                            .not_null(),
+                    )
                     .to_owned(),
             )
             .await
@@ -33,7 +37,12 @@ impl MigrationTrait for Migration {
 
     async fn down(&self, manager: &SchemaManager) -> DbResult<()> {
         manager
-            .drop_table(Table::drop().table(entities::{{ prefix_name }}::Entity).if_exists().to_owned())
+            .drop_table(
+                Table::drop()
+                    .table(entities::{{ prefix_name }}::Entity)
+                    .if_exists()
+                    .to_owned(),
+            )
             .await
     }
 }

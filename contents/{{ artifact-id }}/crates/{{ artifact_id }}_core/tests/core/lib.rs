@@ -1,7 +1,8 @@
 use anyhow::Result;
 use {{ artifact_id }}_core::proto::{{ artifact_id }}_server::{{ ArtifactId }};
 use {{ artifact_id }}_core::proto::{
-    Create{{ PrefixName }}Request, Create{{ PrefixName }}Response, Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
+    Create{{ PrefixName }}Request, Create{{ PrefixName }}Response, Get{{ PrefixName }}ListRequest,
+    Get{{ PrefixName }}ListResponse,
 };
 use {{ artifact_id }}_core::{{ ArtifactId }}Core;
 use {{ artifact_id }}_persistence::{{ ArtifactId }}Persistence;
@@ -38,7 +39,10 @@ async fn test_create_{{ prefix_name }}() -> Result<()> {
 }
 
 async fn core() -> Result<{{ ArtifactId }}Core> {
-    let persistence = {{ ArtifactId }}Persistence::new().await?;
+    let persistence = {{ ArtifactId }}Persistence::builder()
+        .with_temp_db()
+        .build()
+        .await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
     Ok(core)
 }

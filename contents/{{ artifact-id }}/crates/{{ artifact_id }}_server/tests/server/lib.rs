@@ -23,9 +23,15 @@ async fn test_core() -> Result<()> {
 }
 
 async fn init() -> Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Server)> {
-    let persistence = {{ ArtifactId }}Persistence::new().await?;
+    let persistence = {{ ArtifactId }}Persistence::builder()
+        .with_temp_db()
+        .build()
+        .await?;
     let core = {{ ArtifactId }}Core::new(persistence).await?;
-    let server = {{ ArtifactId }}Server::builder(core).with_random_port().build().await?;
+    let server = {{ ArtifactId }}Server::builder(core)
+        .with_random_port()
+        .build()
+        .await?;
 
     let server_clone = server.clone();
 

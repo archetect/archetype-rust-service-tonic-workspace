@@ -24,12 +24,42 @@ pub struct {{ ArtifactId }}Persistence {
 }
 
 impl {{ ArtifactId }}Persistence {
-    pub async fn new() -> Result<{{ ArtifactId }}Persistence> {
-        {{ ArtifactId }}Persistence::new_with_settings(&PersistenceSettings::default()).await
+    pub fn builder() -> Builder {
+        Builder {
+            settings: PersistenceSettings::default(),
+        }
     }
 
-    pub async fn new_with_settings(settings: &PersistenceSettings) -> Result<{{ ArtifactId }}Persistence> {
-        let (connect_url, temp_db) = if let Some(true) = settings.temporary() {
+    pub fn connection(&self) -> &DatabaseConnection {
+        &self.connection
+    }
+
+    pub async fn migrate_up(&self, steps: Option<u32>) -> DbResult<()> {
+        migrations::Migrator::up(self.connection(), steps).await
+    }
+
+    pub async fn migrate_down(&self, steps: Option<u32>) -> DbResult<()> {
+        migrations::Migrator::down(self.connection(), steps).await
+    }
+}
+
+pub struct Builder {
+    settings: PersistenceSettings,
+}
+
+impl Builder {
+    pub fn with_settings(mut self, settings: &PersistenceSettings) -> Self {
+        self.settings = settings.clone();
+        self
+    }
+
+    pub fn with_temp_db(mut self) -> Self {
+        self.settings.set_temp_db(true);
+        self
+    }
+
+    pub async fn build(self) -> Result<{{ ArtifactId }}Persistence> {
+        let (connect_url, temp_db) = if let Some(true) = self.settings.temp_db() {
             let temp_db = PostgresImage::default()
                 .with_database("{{ artifact-id }}")
                 .with_username("test")
@@ -45,46 +75,34 @@ impl {{ ArtifactId }}Persistence {
 
             (connect_url, Some(Arc::new(temp_db)))
         } else {
-            (settings.database().url().to_string(), None)
+            (self.settings.database().url().to_string(), None)
         };
 
         let mut options = ConnectOptions::new(connect_url);
-        if let Some(value) = settings.database().max_connections() {
+        if let Some(value) = self.settings.database().max_connections() {
             options.max_connections(value);
         }
-        if let Some(value) = settings.database().min_connections() {
+        if let Some(value) = self.settings.database().min_connections() {
             options.min_connections(value);
         }
-        if let Some(value) = settings.database().connect_timeout() {
+        if let Some(value) = self.settings.database().connect_timeout() {
             options.connect_timeout(value);
         }
-        if let Some(value) = settings.database().idle_timeout() {
+        if let Some(value) = self.settings.database().idle_timeout() {
             options.idle_timeout(value);
         }
-        if let Some(value) = settings.database().max_lifetime() {
+        if let Some(value) = self.settings.database().max_lifetime() {
             options.max_lifetime(value);
         }
-        options.sqlx_logging(settings.database().log_sql());
+        options.sqlx_logging(self.settings.database().log_sql());
 
         let connection: DatabaseConnection = Database::connect(options).await?;
 
-        if settings.migrate().or(Some(true)).unwrap() || temp_db.is_some() {
+        if self.settings.migrate().or(Some(true)).unwrap() || temp_db.is_some() {
             migrations::Migrator::up(&connection, None).await?;
         }
 
         Ok({{ ArtifactId }}Persistence { connection, temp_db })
-    }
-
-    pub fn connection(&self) -> &DatabaseConnection {
-        &self.connection
-    }
-
-    pub async fn migrate_up(&self, steps: Option<u32>) -> DbResult<()> {
-        migrations::Migrator::up(self.connection(), steps).await
-    }
-
-    pub async fn migrate_down(&self, steps: Option<u32>) -> DbResult<()> {
-        migrations::Migrator::down(self.connection(), steps).await
     }
 }
 

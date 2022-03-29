@@ -52,8 +52,7 @@ impl Settings {
             .read(true)
             .write(true) // <--------- this
             .create(true)
-            .open(format!("{DEFAULT_CONFIG_FILE}.yaml"))
-            ?;
+            .open(format!("{DEFAULT_CONFIG_FILE}.yaml"))?;
         file.write_all(self.to_yaml()?.as_bytes())?;
         Ok(())
     }

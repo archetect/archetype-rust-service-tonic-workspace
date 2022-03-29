@@ -2,15 +2,15 @@ use tonic::{Request, Response, Status};
 
 use {{ artifact_id }}_persistence::{entities::*, sea_orm::prelude::*, sea_orm::*, Page};
 
+use crate::conversion::{ConvertFrom, ConvertTo};
+use crate::proto::{{'{'}}{{ PrefixName }}, Update{{ PrefixName }}Request, Update{{ PrefixName }}Response};
 use crate::{
     proto::{
-        {{ artifact_id }}_server::{{ ArtifactId }}, Create{{ PrefixName }}Request, Create{{ PrefixName }}Response,
-        Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
+        {{ artifact_id }}_server::{{ ArtifactId }}, Create{{ PrefixName }}Request,
+        Create{{ PrefixName }}Response, Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
     },
     {{ ArtifactId }}Core,
 };
-use crate::conversion::{ConvertFrom, ConvertTo};
-use crate::proto::{{'{'}}{{ PrefixName }}, Update{{ PrefixName }}Request, Update{{ PrefixName }}Response};
 
 #[tonic::async_trait]
 impl {{ ArtifactId }} for {{ ArtifactId }}Core {
@@ -36,24 +36,25 @@ impl {{ ArtifactId }} for {{ ArtifactId }}Core {
         Err(Status::internal("Unexpected Error"))
     }
 
-    async fn update_{{ prefix_name }}(&self, request: Request<Update{{ PrefixName }}Request>) -> Result<Response<Update{{ PrefixName }}Response>, Status> {
-        let {{ prefix_name }}_record: {{ prefix_name }}::ActiveModel = request.into_inner().record.unwrap().convert_to()?;
-        let result = self.persistence.update_{{ prefix_name }}({{ prefix_name }}_record.into_active_model()).await;
+    async fn update_{{ prefix_name }}(
+        &self,
+        request: Request<Update{{ PrefixName }}Request>,
+    ) -> Result<Response<Update{{ PrefixName }}Response>, Status> {
+        let {{ prefix_name }}_record: {{ prefix_name }}::ActiveModel =
+            request.into_inner().record.unwrap().convert_to()?;
+        let result = self
+            .persistence
+            .update_{{ prefix_name }}({{ prefix_name }}_record.into_active_model())
+            .await;
 
         match result {
-            Ok(entity) => {
-                Ok(Response::new(Update{{ PrefixName }}Response {
-                    record: Some({{ PrefixName }}::convert_from(entity)),
-                }))
-            }
-            Err(err) => {
-                match err {
-                    DbErr::RecordNotFound(err) => {
-                        Err(Status::not_found(err))
-                    }
-                    _ => Err(Status::internal("Unexpected error"))
-                }
-            }
+            Ok(entity) => Ok(Response::new(Update{{ PrefixName }}Response {
+                record: Some({{ PrefixName }}::convert_from(entity)),
+            })),
+            Err(err) => match err {
+                DbErr::RecordNotFound(err) => Err(Status::not_found(err)),
+                _ => Err(Status::internal("Unexpected error")),
+            },
         }
     }
 
