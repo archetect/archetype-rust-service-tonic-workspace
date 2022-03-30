@@ -12,4 +12,4 @@ test-all:
     cargo test
 
 test TEST:
-    cargo test --test {{'{'}}'{ TEST }}
+    cargo test --test {{'{'}}{ TEST }}
