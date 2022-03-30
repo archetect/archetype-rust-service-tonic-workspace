@@ -43,6 +43,8 @@ async fn core() -> Result<{{ ArtifactId }}Core> {
         .with_temp_db()
         .build()
         .await?;
-    let core = {{ ArtifactId }}Core::new(persistence).await?;
+    let core = {{ ArtifactId }}Core::builder(persistence)
+        .build()
+        .await?;
     Ok(core)
 }

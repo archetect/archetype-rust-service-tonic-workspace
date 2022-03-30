@@ -19,14 +19,32 @@ pub struct {{ ArtifactId }}Core {
 }
 
 impl {{ ArtifactId }}Core {
-    pub async fn new(persistence: {{ ArtifactId }}Persistence) -> Result<{{ ArtifactId }}Core> {
-        {{ ArtifactId }}Core::new_with_settings(persistence, &Default::default()).await
+    pub fn builder(persistence: {{ ArtifactId }}Persistence) -> Builder {
+        Builder::new(persistence)
+    }
+}
+
+pub struct Builder {
+    persistence: {{ ArtifactId }}Persistence,
+    settings: CoreSettings,
+}
+
+impl Builder {
+    pub fn new(persistence: {{ ArtifactId }}Persistence) -> Self {
+        Self {
+            persistence,
+            settings: Default::default(),
+        }
     }
 
-    pub async fn new_with_settings(
-        persistence: {{ ArtifactId }}Persistence,
-        _settings: &CoreSettings,
-    ) -> Result<{{ ArtifactId }}Core> {
-        Ok({{ ArtifactId }}Core { persistence })
+    pub fn with_settings(mut self, settings: &CoreSettings) -> Self {
+        self.settings = settings.clone();
+        self
+    }
+
+    pub async fn build(self) -> Result<{{ ArtifactId }}Core> {
+        Ok({{ ArtifactId }}Core {
+            persistence: self.persistence,
+        })
     }
 }

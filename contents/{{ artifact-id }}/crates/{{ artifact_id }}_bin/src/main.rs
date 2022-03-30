@@ -53,7 +53,10 @@ async fn main() -> Result<()> {
                 .with_settings(settings.persistence())
                 .build()
                 .await?;
-            let core = {{ ArtifactId }}Core::new_with_settings(persistence, settings.core()).await?;
+            let core = {{ ArtifactId }}Core::builder(persistence)
+                .with_settings(settings.core())
+                .build()
+                .await?;
             let server = {{ ArtifactId }}Server::builder(core)
                 .with_settings(settings.server())
                 .build()

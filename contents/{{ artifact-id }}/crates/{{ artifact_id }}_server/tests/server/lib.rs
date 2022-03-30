@@ -27,7 +27,9 @@ async fn init() -> Result<({{ ArtifactId }}Client<Channel>, {{ ArtifactId }}Serv
         .with_temp_db()
         .build()
         .await?;
-    let core = {{ ArtifactId }}Core::new(persistence).await?;
+    let core = {{ ArtifactId }}Core::builder(persistence)
+        .build()
+        .await?;
     let server = {{ ArtifactId }}Server::builder(core)
         .with_random_port()
         .build()
