@@ -10,4 +10,5 @@ fix:
   fd -0 -H '{{ pattern }}' . | xargs -0 sd -f c -s "{{ PascalCase }}" "{{{{ PrefixName }}"
   fd -0 -H '{{ pattern }}' . | xargs -0 sd -f c -s "{{ snake_case }}" "{{{{ prefix_name }}"
   fd -0 -H '{{ pattern }}' . | xargs -0 sd -f c -s "{{ train-case }}" "{{{{ prefix-name }}"
+  fd -0 -H '.*\.proto' . | xargs -0 sd -f c -s ".service" "{{{{ suffix_name }}"
   fd -0 -H '{{ pattern }}' . | xargs -0 sd -f c -s {{"{{"}}"{" {{"{{"}}"'{'}}"{{"{{"}}

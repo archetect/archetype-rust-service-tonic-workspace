@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package {{ prefix_name }}.{{ suffix_name }};
+package {{ prefix_name }}{{ suffix_name }};
 
 service {{ ArtifactId }} {
     rpc Find{{ PrefixName }}(Find{{ PrefixName }}Request) returns (Find{{ PrefixName }}Response) {}
