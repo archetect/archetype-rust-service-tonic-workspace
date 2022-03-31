@@ -5,6 +5,14 @@ use crate::{{'{'}}{{ ArtifactId }}Persistence, DbResult};
 use crate::entities::*;
 
 impl {{ ArtifactId }}Persistence {
+    pub async fn find_{{ prefix_name }}(
+        &self,
+        id: Uuid,
+    ) -> DbResult<Option<{{ prefix_name }}::Model>> {
+        let record = {{ prefix_name }}::Entity::find_by_id(id).one(self.connection()).await?;
+        Ok(record)
+    }
+
     pub async fn insert_{{ prefix_name }}(
         &self,
         {{ prefix_name }}_record: {{ prefix_name }}::ActiveModel,

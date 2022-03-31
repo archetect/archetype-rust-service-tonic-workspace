@@ -1,10 +1,9 @@
 syntax = "proto3";
 
-package {{ artifact_id }};
-
-import "google/protobuf/wrappers.proto";
+package {{ prefix_name }}.{{ suffix_name }};
 
 service {{ ArtifactId }} {
+    rpc Find{{ PrefixName }}(Find{{ PrefixName }}Request) returns (Find{{ PrefixName }}Response) {}
     rpc Create{{ PrefixName }}(Create{{ PrefixName }}Request) returns (Create{{ PrefixName }}Response) {}
     rpc Update{{ PrefixName }}(Update{{ PrefixName }}Request) returns (Update{{ PrefixName }}Response) {}
     rpc Get{{ PrefixName }}List(Get{{ PrefixName }}ListRequest) returns (Get{{ PrefixName }}ListResponse) {}
@@ -17,6 +16,14 @@ message Id {
 message {{ PrefixName }} {
     Id id = 1;
     string contents = 2;
+}
+
+message Find{{ PrefixName }}Request {
+    Id id = 1;
+}
+
+message Find{{ PrefixName }}Response {
+    {{ PrefixName }} record = 1;
 }
 
 message Create{{ PrefixName }}Request {

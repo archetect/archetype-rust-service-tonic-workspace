@@ -2,18 +2,42 @@ use tonic::{Request, Response, Status};
 
 use {{ artifact_id }}_persistence::{entities::*, sea_orm::prelude::*, sea_orm::*, Page};
 
-use crate::conversion::{ConvertFrom, ConvertTo};
-use crate::proto::{{'{'}}{{ PrefixName }}, Update{{ PrefixName }}Request, Update{{ PrefixName }}Response};
 use crate::{
-    proto::{
-        {{ artifact_id }}_server::{{ ArtifactId }}, Create{{ PrefixName }}Request,
-        Create{{ PrefixName }}Response, Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
-    },
     {{ ArtifactId }}Core,
+    proto::{
+        Create{{ PrefixName }}Request, Create{{ PrefixName }}Response,
+        {{ artifact_id }}_server::{{ ArtifactId }}, Get{{ PrefixName }}ListRequest, Get{{ PrefixName }}ListResponse,
+    },
 };
+use crate::conversion::{ConvertFrom, ConvertTo};
+use crate::proto::{{'{'}}{{ PrefixName }}, Find{{ PrefixName }}Request, Find{{ PrefixName }}Response, Update{{ PrefixName }}Request, Update{{ PrefixName }}Response};
 
 #[tonic::async_trait]
 impl {{ ArtifactId }} for {{ ArtifactId }}Core {
+    async fn find_{{ prefix_name }}(&self, request: Request<Find{{ PrefixName }}Request>) -> Result<Response<Find{{ PrefixName }}Response>, Status> {
+        let request = request.into_inner();
+        let id = request.id.convert_to()?;
+        let result = self.persistence.find_{{ prefix_name }}(id).await;
+        match result {
+            Ok(result) => {
+                match result {
+                    None => Err(Status::not_found("Record not found".to_owned())),
+                    Some(model) => {
+                        Ok(Response::new(Find{{ PrefixName }}Response {
+                            record: Some({{ PrefixName }}::convert_from(model))
+                        }))
+                    }
+                }
+            }
+            Err(err) => {
+                match err {
+                    DbErr::RecordNotFound(err) => Err(Status::not_found(err)),
+                    _ => Err(Status::internal("Unexpected error")),
+                }
+            }
+        }
+    }
+
     async fn create_{{ prefix_name }}(
         &self,
         request: Request<Create{{ PrefixName }}Request>,
