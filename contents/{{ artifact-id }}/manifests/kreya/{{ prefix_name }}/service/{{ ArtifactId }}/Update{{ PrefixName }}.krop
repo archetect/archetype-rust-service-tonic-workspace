@@ -1,0 +1,12 @@
+{
+  "details": {
+    "methodFqn": "{{ prefix_name }}.{{ suffix_name }}.{{ ArtifactId }}.Update{{ PrefixName }}"
+  },
+  "requests": [
+    {
+      "location": "Update{{ PrefixName }}-request.json"
+    }
+  ],
+  "operationType": "unary",
+  "invokerName": "grpc"
+}

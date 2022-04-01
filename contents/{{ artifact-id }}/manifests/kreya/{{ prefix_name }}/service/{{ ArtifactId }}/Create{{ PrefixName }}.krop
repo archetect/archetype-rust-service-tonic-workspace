@@ -1,6 +1,6 @@
 {
   "details": {
-    "methodFqn": "{{ artifact_id }}.{{ ArtifactId }}.Create{{ PrefixName }}"
+    "methodFqn": "{{ prefix_name }}.{{ suffix_name }}.{{ ArtifactId }}.Create{{ PrefixName }}"
   },
   "requests": [
     {

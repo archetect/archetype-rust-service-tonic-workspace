@@ -1,4 +1,4 @@
 {
-  "host": "fooBar",
-  "fileByFilename": "fooBar"
+  "host": "http://localhost:{{ service-port }}",
+  "fileByFilename": "{{ prefix_name }}/{{ suffix_name }}.proto"
 }
