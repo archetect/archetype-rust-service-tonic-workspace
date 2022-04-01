@@ -98,7 +98,7 @@ impl {{ ArtifactId }} for {{ ArtifactId }}Core {
             Ok(Page { records, total_pages }) => {
                 let records = records.into_iter().map({{ PrefixName }}::convert_from).collect();
                 Ok(Response::new(Get{{ PrefixName }}ListResponse {
-                    record: records,
+                    records: records,
                     total_pages: total_pages as u32,
                 }))
             }

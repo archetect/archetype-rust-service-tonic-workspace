@@ -48,6 +48,6 @@ message Get{{ PrefixName }}ListRequest {
 }
 
 message Get{{ PrefixName }}ListResponse {
-    repeated {{ PrefixName }} record = 1;
+    repeated {{ PrefixName }} records = 1;
     uint32 total_pages = 2;
 }
