@@ -13,3 +13,8 @@ test-all:
 
 test TEST:
     cargo test --test {{'{'}}{ TEST }}
+
+install-defaults := ''
+
+install install-options=install-defaults:
+    cargo install --path crates/{{ artifact_id }}_bin/ {{'{'}}{ install-options }}

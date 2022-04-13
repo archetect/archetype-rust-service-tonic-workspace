@@ -12,11 +12,11 @@ use tonic::Request;
 async fn test_create_{{ prefix_name }}() -> Result<()> {
     let core = core().await?;
 
-    let result = core
+    let response = core
         .get_{{ prefix_name }}_list(Request::new(Get{{ PrefixName }}ListRequest { page_size: 0, page: 0 }))
         .await?;
-    let Get{{ PrefixName }}ListResponse { record, total_pages } = result.into_inner();
-    assert_eq!(record.len(), 0);
+    let Get{{ PrefixName }}ListResponse { records, total_pages } = response.into_inner();
+    assert_eq!(records.len(), 0);
     assert_eq!(total_pages, 0);
 
     let response = core
@@ -31,8 +31,8 @@ async fn test_create_{{ prefix_name }}() -> Result<()> {
     let response = core
         .get_{{ prefix_name }}_list(Request::new(Get{{ PrefixName }}ListRequest { page_size: 0, page: 0 }))
         .await?;
-    let Get{{ PrefixName }}ListResponse { record, total_pages } = response.into_inner();
-    assert_eq!(record.len(), 1);
+    let Get{{ PrefixName }}ListResponse { records, total_pages } = response.into_inner();
+    assert_eq!(records.len(), 1);
     assert_eq!(total_pages, 1);
 
     Ok(())
