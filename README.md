@@ -10,6 +10,7 @@ A Rust gRPC-based Microservice archetype, with the following qualities:
   - Server: [gRPC](https://grpc.io/) based remoting layer using [Tonic](https://github.com/hyperium/tonic)
   - Core: business layer, adapting the gRPC API implementation over the persistence layer
   - Persistence: persistence tier abstraction and database migrations, provided by [SeaORM](https://github.com/SeaQL/sea-orm)
+- Tests, as well as the service itself, may optionally use ephemeral datastores provided by [testcontainers-async](https://github.com/jimmiebfulton/testcontainers-async-rust)
 
 To generate a project from this archetype using [Archetect](https://github.com/archetect/archetect):
 
