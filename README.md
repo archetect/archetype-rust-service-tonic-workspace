@@ -2,7 +2,7 @@
 
 A Rust gRPC-based Microservice archetype, with the following qualities:
 
-- Follows strong [Twelve Factor](https://12factor.net/) principles
+- Strong adherence to [Twelve Factor](https://12factor.net/) principles
   - Layered, hierarchical configuration using [config](https://github.com/mehcode/config-rs) 
   - Run and managed by an ergonomic CLI interface, powered by [clap](https://github.com/clap-rs/clap)
 - Completely asynchronous, powered by [Tokio](https://tokio.rs/)
